@@ -1,0 +1,83 @@
+---
+  verb:
+    -
+        root: istua
+        conj:
+            -
+              - istuin
+              - istuit
+              - istui
+              - istui
+              - istuimme
+              - istuitte
+              - istuivat
+            -
+              - istun
+              - istut
+              - istuu
+              - istuu
+              - istumme
+              - istutte
+              - istuvat
+            -
+              - tulen istumaan
+              - tulet istumaan
+              - tulee istumaan
+              - tulee istumaan
+              - tulemme istumaan
+              - tulette istumaan
+              - tulevat istumaan
+    -
+        root: nähdä
+        conj:
+            -
+              - näin
+              - näit
+              - näki
+              - näki
+              - näimme
+              - näitte
+              - näkivat
+            -
+              - näen
+              - näet
+              - näkee
+              - näkee
+              - näemme
+              - näette
+              - näkevät
+            -
+              - tulen näkemään
+              - tulet näkemään
+              - tulee näkemään
+              - tulee näkemään
+              - tulemme näkemään
+              - tulette näkemään
+              - tulevat näkemään
+    -
+        root: kysyä
+        conj:
+            -
+              - kysyin
+              - kysyit
+              - kysyi
+              - kysyi
+              - kysyimme
+              - kysyitte
+              - kysyivät
+            -
+              - kysyn
+              - kysyt
+              - kysyy
+              - kysyy
+              - kysymme
+              - kysytte
+              - kysyvät
+            -
+              - tulen kysymään
+              - tulet kysymään
+              - tulee kysymään
+              - tulee kysymään
+              - tulemme kysymään
+              - tulette kysymään
+              - tulevat kysymään
