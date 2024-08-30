@@ -3,6 +3,10 @@ import yaml
 import SuWord
 import SuCommon
 import json
+import logging
+
+file_name = "./su_verbs.yaml"
+
 
 class SuVocabulary():
 
@@ -12,18 +16,16 @@ class SuVocabulary():
             self.roots.append(verb["root"])
 
         self.words.append(SuWord.SuNoun(""))
-
-        print(len(self.words))
+        logging.debug('%u %s', len(self.words), 'words')
         for word in self.words:
-#            print(word.getRoot())
-            print(word.getConj(SuCommon.Tenses.PAST))
+            logging.debug(word.getConj(SuCommon.Tenses.PAST))
 
-        print(self.roots)
+
+        logging.debug(self.roots)
 
     def __init__(self):
-        file_name = "./su_verbs.yaml"
         with open(file_name, 'r') as f:
-            print(f'Open {file_name}')
+            logging.info(f'Open {file_name}')
             data = yaml.safe_load(f)
 
         self.words = []
@@ -37,6 +39,19 @@ class SuVocabulary():
     def getFormsByRoot(self, root):
         idx = self.roots.index(root)
         return json.dumps(self.words[idx].getForms())
+
+def SuVocMainFunc(inp_q, outp_q):
+    Voc = SuVocabulary()
+
+    while not inp_q.empty():
+        key = inp_q.get()
+        logging.debug('key "%s" received', key)
+
+        rootList = Voc.getRootsByKey("ky")
+
+        logging.debug('roots list: %s', rootList)
+
+
 
 """
     def myFunc(self, word):
