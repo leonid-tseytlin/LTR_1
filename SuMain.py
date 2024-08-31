@@ -1,5 +1,6 @@
 from multiprocessing import Process, Queue, Lock
 import SuVoc
+import SuParser
 import json
 import logging
 
@@ -16,7 +17,7 @@ if __name__ == '__main__':
     p_voc = Process(target=SuVoc.SuVocMainFunc, args=(voc_inp_q, voc_outp_q))
     p_voc.start()
 
-    voc_inp_q.put("ky")
+    voc_inp_q.put(json.dumps({SuParser.STARTING: "ky"}))
 
     p_voc.join()
 
