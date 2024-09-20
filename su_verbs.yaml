@@ -81,3 +81,31 @@
               - tulemme kysymään
               - tulette kysymään
               - tulevat kysymään
+    -
+        root: puhua
+        conj:
+            -
+              - puhuin
+              - puhuit
+              - puhui
+              - puhui
+              - puhuimme
+              - puhuitte
+              - puhuivat
+            -
+              - puhun
+              - puhut
+              - puhuu
+              - puhuu
+              - puhumme
+              - puhutte
+              - puhuvat
+            -
+              - tulen puhumaan
+              - tulet puhumaan
+              - tulee puhumaan
+              - tulee puhumaan
+              - tulemme puhumaan
+              - tulette puhumaan
+              - tulevat puhumaan
+              

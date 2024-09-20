@@ -59,18 +59,20 @@ class SuVocabulary():
 def SuVocMainFunc(inp_q, outp_q):
     Voc = SuVocabulary()
 
-    while not inp_q.empty():
-        msg = inp_q.get()
-        logging.debug('Message "%s" received', msg)
+    while (True):
+        while not inp_q.empty():
+            msg = inp_q.get()
+            logging.debug('Message "%s" received', msg)
 
-        key, parsed_data = Voc.parser.parse(msg)
-        logging.debug(key)
-        logging.debug(parsed_data)
+            key, parsed_data = Voc.parser.parse(msg)
+            logging.debug(key)
+            logging.debug(parsed_data)
 
-        outData = Voc.handler_fn[key](parsed_data)
-        logging.debug('output data: %s', outData)
-        jsonOutData = json.dumps(outData)
-        logging.debug('output data: %s', jsonOutData)
+            outData = Voc.handler_fn[key](parsed_data)
+            logging.debug('output data: %s', outData)
+            jsonOutData = json.dumps(outData)
+            logging.debug('output data: %s', jsonOutData)
+            outp_q.put(json.dumps({SuParser.ROOTS_LIST: outData}))
 
 
 

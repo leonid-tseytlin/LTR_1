@@ -1,23 +1,25 @@
 from multiprocessing import Process, Queue, Lock
 import SuVoc
 import SuParser
+import SuFront
 import json
 import logging
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
-                        format="%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)-11s:%(lineno)-3d]  || %(message)s",
+                        format="%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)-19s:%(lineno)-3d]  || %(message)s",
                         datefmt="%Y-%m-%d:%H:%M:%S",
                         )
     logging.info('SuVoc started')
 
-    voc_inp_q = Queue()
-    voc_outp_q = Queue()
+    front_to_voc_q = Queue()
+    voc_to_front_q = Queue()
 
-    p_voc = Process(target=SuVoc.SuVocMainFunc, args=(voc_inp_q, voc_outp_q))
+    p_voc = Process(target=SuVoc.SuVocMainFunc, args=(front_to_voc_q, voc_to_front_q))
     p_voc.start()
+#    p_voc.join()
+    p_front = Process(target=SuFront.SuFrontMainFunc, args=(voc_to_front_q, front_to_voc_q))
+    p_front.start()
 
-    voc_inp_q.put(json.dumps({SuParser.STARTING: "ky"}))
-
-    p_voc.join()
+#    p_front.join()
 
