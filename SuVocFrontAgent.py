@@ -14,7 +14,7 @@ class SuVocFrontAgent():
     def listenThreadFunc(self, inp_q, cbFn):
         logging.info('Thread running')
         msg = inp_q.get()
-        logging.debug('Message "%s" received', msg)
+#        logging.debug('Message "%s" received', msg)
         key, parsed_data = self.parser.parse(msg)
         logging.debug(key)
         logging.debug(parsed_data)

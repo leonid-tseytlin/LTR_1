@@ -56,7 +56,7 @@ class SuVocabulary():
         idx = self.roots.index(root)
         return json.dumps(self.words[idx].getForms())
 
-def SuVocMainFunc(inp_q, outp_q):
+def su_voc_main_func(inp_q, outp_q):
     Voc = SuVocabulary()
 
     while (True):
@@ -70,8 +70,8 @@ def SuVocMainFunc(inp_q, outp_q):
 
             outData = Voc.handler_fn[key](parsed_data)
             logging.debug('output data: %s', outData)
-            jsonOutData = json.dumps(outData)
-            logging.debug('output data: %s', jsonOutData)
+#            jsonOutData = json.dumps(outData)
+#            logging.debug('output data: %s', jsonOutData)
             outp_q.put(json.dumps({SuParser.ROOTS_LIST: outData}))
 
 

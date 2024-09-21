@@ -16,7 +16,7 @@ class SuNoun(SuWord):
         return self.root
 
     def getConj(self, key):
-        return "Not implemented"
+        return "Noun still not implemented"
 
 #######################################################################
 class SuVerb(SuWord):

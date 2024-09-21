@@ -19,14 +19,6 @@
               - istumme
               - istutte
               - istuvat
-            -
-              - tulen istumaan
-              - tulet istumaan
-              - tulee istumaan
-              - tulee istumaan
-              - tulemme istumaan
-              - tulette istumaan
-              - tulevat istumaan
     -
         root: nähdä
         conj:
@@ -46,14 +38,25 @@
               - näemme
               - näette
               - näkevät
+    -
+        root: näyttää
+        conj:
             -
-              - tulen näkemään
-              - tulet näkemään
-              - tulee näkemään
-              - tulee näkemään
-              - tulemme näkemään
-              - tulette näkemään
-              - tulevat näkemään
+              - näytin
+              - näytit
+              - näytti
+              - näytti
+              - näytimme
+              - näytitte
+              - näyttivät
+            -
+              - näytän
+              - näytät
+              - näyttää
+              - näyttää
+              - näytämme
+              - näytätte
+              - näyttävät
     -
         root: kysyä
         conj:
@@ -73,14 +76,6 @@
               - kysymme
               - kysytte
               - kysyvät
-            -
-              - tulen kysymään
-              - tulet kysymään
-              - tulee kysymään
-              - tulee kysymään
-              - tulemme kysymään
-              - tulette kysymään
-              - tulevat kysymään
     -
         root: puhua
         conj:
@@ -100,12 +95,43 @@
               - puhumme
               - puhutte
               - puhuvat
+    -
+        root: sanoa
+        conj:
             -
-              - tulen puhumaan
-              - tulet puhumaan
-              - tulee puhumaan
-              - tulee puhumaan
-              - tulemme puhumaan
-              - tulette puhumaan
-              - tulevat puhumaan
+              - sanoin
+              - sanoit
+              - sanoi
+              - sanoi
+              - sanoimme
+              - sanoitte
+              - sanoivat
+            -
+              - sanon
+              - sanot
+              - sanoo
+              - sanoo
+              - sanomme
+              - sanotte
+              - sanovat
+    -
+        root: kulkea
+        conj:
+            -
+              - kuljin
+              - kuljit
+              - kulki
+              - kulki
+              - kuljimme
+              - kuljitte
+              - kulkivat
+            -
+              - kuljen
+              - kuljet
+              - kulkee
+              - kulkee
+              - kuljemme
+              - kuljette
+              - kulkevat
+              
               

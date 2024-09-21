@@ -25,6 +25,7 @@ class SuMainWindow(QMainWindow):
         self.button.clicked.connect(self.on_button_click)
 
         self.vocAgent = voc_agent
+        self.rootManagers = []
 
     def on_button_click(self):
         logging.debug("Button clicked!")
@@ -32,41 +33,66 @@ class SuMainWindow(QMainWindow):
 
         self.vocComm = VocCommunicator(self)
 
+    def add_root_manager(self, root_word):
+        new_idx = len(self.rootManagers)
+        self.rootManagers.append(RootManager(self, root_word, new_idx))
+
+    def clear_root_managers(self):
+        for root_manager in self.rootManagers:
+            del root_manager
+        self.rootManagers.clear()
 
 class VocCommunicator(QGraphicsObject):
     vocSignal = PyQt5.QtCore.pyqtSignal(list)
 
-    def __init__(self, MainWindow):
+    def __init__(self, main_window):
         super().__init__()
-        self.dataGroupBox = None
-        self.mainWindow = MainWindow
+        self.mainWindow = main_window
         self.vocSignal.connect(self.get_roots_sig_handler)
         self.mainWindow.vocAgent.getRootsByStarting(self.mainWindow.text_field.text(), self.get_roots_callback)
+        logging.debug('Communicator created')
 
     def get_roots_callback(self, roots):
         self.vocSignal.emit(roots)
 
     def get_roots_sig_handler(self, roots):
         logging.debug('Message "%s" received', roots)
+        self.mainWindow.clear_root_managers()
+        for root in roots:
+            self.mainWindow.add_root_manager(root)
+
+    def __del__(self):
+        logging.debug('Communicator deleted')
+
+class RootManager:
+    def __init__(self, main_window, root_word, idx):
+        self.dataGroupBox = None
+        self.mainWindow = main_window
+
         self.dataGroupBox = QGroupBox("", self.mainWindow)
-        self.dataGroupBox.resize(400, 300)
-        self.dataGroupBox.move(200, 100)
+        self.dataGroupBox.resize(200, 62)
+        self.dataGroupBox.move(20, 100*(idx+1))
         self.dataGroupBox.show()
 
         self.dataGroupBox.textEdit = QTextEdit(self.dataGroupBox)
-        self.dataGroupBox.textEdit.setPlainText(roots[0])
+        self.dataGroupBox.textEdit.setPlainText(root_word)
         self.dataGroupBox.textEdit.resize(200, 30)
-        self.dataGroupBox.textEdit.move(30, 30)
+        self.dataGroupBox.textEdit.move(0, 5)
         self.dataGroupBox.textEdit.show()
 
-        self.dataGroupBox.button2 = QPushButton("Full Form", self.dataGroupBox)
-        self.dataGroupBox.button2.move(30, 60)
-        self.dataGroupBox.button2.show()
+        self.dataGroupBox.full_form_button = QPushButton("Full Form", self.dataGroupBox)
+        self.dataGroupBox.full_form_button.move(0, 35)
+        self.dataGroupBox.full_form_button.show()
+
+        logging.debug('Root manager "%u" created', idx)
+
+    def __del__(self):
+#        self.dataGroupBox.hide()
+        self.dataGroupBox.deleteLater()
+        logging.debug('RootManager deleted')
 
 
-
-
-def SuFrontMainFunc(inp_q, outp_q):
+def su_front_main_func(inp_q, outp_q):
 
     voc_agent = SuVocFrontAgent.SuVocFrontAgent(inp_q, outp_q)
 
