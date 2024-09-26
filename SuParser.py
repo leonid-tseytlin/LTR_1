@@ -5,6 +5,8 @@ STARTING = "start"
 ROOTS_LIST = "roots_list"
 ROOT = "root"
 FULL_FORM = "full_form"
+TRANSLATE = "translate"
+TRANS_RESULT = "translation"
 
 class SuParser():
     def __init__(self, key_list):

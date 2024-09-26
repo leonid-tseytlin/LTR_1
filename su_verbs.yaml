@@ -2,6 +2,7 @@
   verb:
     -
         root: istua
+        trans: сидеть
         conj:
             -
               - istuin
@@ -21,6 +22,7 @@
               - istuvat
     -
         root: nähdä
+        trans: видеть
         conj:
             -
               - näin
@@ -40,6 +42,7 @@
               - näkevät
     -
         root: näyttää
+        trans: показывать
         conj:
             -
               - näytin
@@ -59,6 +62,7 @@
               - näyttävät
     -
         root: kysyä
+        trans: спрашивать
         conj:
             -
               - kysyin
@@ -78,6 +82,7 @@
               - kysyvät
     -
         root: puhua
+        trans: говорить
         conj:
             -
               - puhuin
@@ -97,6 +102,7 @@
               - puhuvat
     -
         root: sanoa
+        trans: сказать
         conj:
             -
               - sanoin
@@ -116,6 +122,7 @@
               - sanovat
     -
         root: kulkea
+        trans: идти
         conj:
             -
               - kuljin

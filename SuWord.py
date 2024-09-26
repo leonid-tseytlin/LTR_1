@@ -23,6 +23,7 @@ class SuVerb(SuWord):
 
     def __init__(self, data):
         self.root = data["root"]
+        self.trans = data["trans"]
         self.conj = data["conj"]
 
     def getRoot(self):
@@ -30,6 +31,9 @@ class SuVerb(SuWord):
 
     def getForms(self):
         return self.conj
+
+    def getTrans(self):
+        return self.trans
 
     def getConj(self, key):
         return self.conj[key]

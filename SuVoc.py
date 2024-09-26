@@ -25,12 +25,23 @@ class SuVocabulary():
 
     def handleStarting(self, data):
         logging.debug(data)
-        rootsList = self.getRootsByKey(data)
+#        rootsList = self.getRootsByKey(data)
+        rootsList = list(filter(lambda x: x.startswith(data), self.roots))
         logging.debug('roots list: %s', rootsList)
         return rootsList
 
+    def handleTranslate(self, data):
+        logging.info(data)
+        idx = self.roots.index(data)
+        trans = self.words[idx].getTrans()
+        logging.debug('translation: %s', trans)
+        return trans
+
     def handleRoot(self, data):
         logging.info(data)
+        idx = self.roots.index(data)
+        forms = self.words[idx].getForms()
+        return forms
 
 
     def __init__(self):
@@ -40,21 +51,20 @@ class SuVocabulary():
 
         self.handler_fn = {
             SuParser.STARTING: self.handleStarting,
+            SuParser.TRANSLATE: self.handleTranslate,
             SuParser.ROOT: self.handleRoot,
         }
-        self.parser = SuParser.SuParser((SuParser.STARTING, SuParser.ROOT))
+        self.res_code = {
+            SuParser.STARTING: SuParser.ROOTS_LIST,
+            SuParser.TRANSLATE: SuParser.TRANS_RESULT,
+            SuParser.ROOT: SuParser.FULL_FORM,
+        }
+        self.parser = SuParser.SuParser((SuParser.STARTING, SuParser.ROOT, SuParser.TRANSLATE))
 
         self.words = []
         self.roots = []
 
         self.build(data)
-
-    def getRootsByKey(self, key):
-        return list(filter(lambda x: x.startswith(key), self.roots))
-
-    def getFormsByRoot(self, root):
-        idx = self.roots.index(root)
-        return json.dumps(self.words[idx].getForms())
 
 def su_voc_main_func(inp_q, outp_q):
     Voc = SuVocabulary()
@@ -70,9 +80,9 @@ def su_voc_main_func(inp_q, outp_q):
 
             outData = Voc.handler_fn[key](parsed_data)
             logging.debug('output data: %s', outData)
-#            jsonOutData = json.dumps(outData)
-#            logging.debug('output data: %s', jsonOutData)
-            outp_q.put(json.dumps({SuParser.ROOTS_LIST: outData}))
+            jsonOutData = json.dumps({Voc.res_code[key]: outData})
+            logging.debug('output data: %s', jsonOutData)
+            outp_q.put(json.dumps({Voc.res_code[key]: outData}))
 
 
 
