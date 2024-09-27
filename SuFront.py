@@ -4,8 +4,10 @@ import PyQt5
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QVBoxLayout, QGraphicsObject, QTextEdit
 import json
+import threading
 import tkinter as tk
 import logging
+import time
 import SuParser
 import SuVocFrontAgent
 
@@ -13,6 +15,8 @@ voc_agent = None
 communicator = None
 
 class SuMainWindow(QMainWindow):
+    stop_event = threading.Event()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Su Application")
@@ -21,21 +25,35 @@ class SuMainWindow(QMainWindow):
         self.text_field = QLineEdit(self)
         self.text_field.move(20, 20)
 
-        self.button = QPushButton("Temp. get", self)
-        self.button.move(20, 60)
-        self.button.clicked.connect(self.on_button_click)
-
         self.session = None
 
-    def on_button_click(self):
-        logging.debug("Button clicked!")
-        logging.debug("Text field value: %s", self.text_field.text())
-
-        del self.session
-        self.session = VocComSession(self)
-        communicator.start_session(self.text_field.text(), self.session)
+        self.read_input_thread = threading.Thread(target=self.read_input_thread_func, args=())
+        self.read_input_thread.start()
 
 
+    def read_input_thread_func(self):
+        starting = ""
+        while not self.stop_event.wait(1):
+            logging.info('read_input_thread_func running')
+            cur_text = self.text_field.text()
+            if cur_text:
+                logging.info(cur_text)
+            if starting != cur_text and cur_text != "":
+                logging.info('Old "%s" New "%s"', starting, cur_text)
+                starting = cur_text
+                del self.session
+                self.session = VocComSession(self)
+                communicator.start_session(starting, self.session)
+
+    def closeEvent(self, event):
+        logging.debug('closeEvent called')
+        self.stop_event.set()
+        voc_agent.send_exit_app_to_voc()
+
+    def __del__(self):
+        logging.debug('Main Window deleted')
+
+#=====================================================================================================
 class VocComSession():
     def __init__(self, main_window):
         self.mainWindow = main_window
@@ -55,6 +73,7 @@ class VocComSession():
         self.rootManagers.clear()
 
 
+#=====================================================================================================
 class VocCommunicator(QGraphicsObject):
     rootsVocSignal = PyQt5.QtCore.pyqtSignal(list)
     transVocSignal = PyQt5.QtCore.pyqtSignal(str)
@@ -81,7 +100,7 @@ class VocCommunicator(QGraphicsObject):
 #---------------------------------------------------------------------------
     def get_root_translation(self, root_idx, root_word):
         self.currentRootTransactionIdx = root_idx
-        voc_agent.get_root_translation(root_word, self.get_translation_callback)
+        voc_agent.get_translation_by_root(root_word, self.get_translation_callback)
 
     def get_translation_callback(self, trans):
         self.transVocSignal.emit(trans)
@@ -95,6 +114,7 @@ class VocCommunicator(QGraphicsObject):
         logging.debug('Communicator deleted')
 
 
+#=====================================================================================================
 class RootManager:
     def __init__(self, main_window, root_word, idx):
         self.dataGroupBox = None
@@ -103,16 +123,16 @@ class RootManager:
         self.index = idx
 
         self.dataGroupBox = QGroupBox("", self.mainWindow)
-        self.dataGroupBox.resize(200, 62)
+        self.dataGroupBox.resize(300, 62)
         self.dataGroupBox.move(20, 100*(idx+1))
         self.dataGroupBox.show()
 
-        self.dataGroupBox.textEdit = QTextEdit(self.dataGroupBox)
-        self.dataGroupBox.textEdit.setReadOnly(True)
-        self.dataGroupBox.textEdit.setPlainText(root_word)
-        self.dataGroupBox.textEdit.resize(200, 30)
-        self.dataGroupBox.textEdit.move(0, 5)
-        self.dataGroupBox.textEdit.show()
+        self.dataGroupBox.rootTextEdit = QTextEdit(self.dataGroupBox)
+        self.dataGroupBox.rootTextEdit.setReadOnly(True)
+        self.dataGroupBox.rootTextEdit.setPlainText(root_word)
+        self.dataGroupBox.rootTextEdit.resize(300, 30)
+        self.dataGroupBox.rootTextEdit.move(0, 5)
+        self.dataGroupBox.rootTextEdit.show()
 
         self.dataGroupBox.translate_button = QPushButton("Translate", self.dataGroupBox)
         self.dataGroupBox.translate_button.move(0, 35)
@@ -120,7 +140,7 @@ class RootManager:
         self.dataGroupBox.translate_button.clicked.connect(self.translate_button_click)
 
         self.dataGroupBox.full_form_button = QPushButton("Full Form", self.dataGroupBox)
-        self.dataGroupBox.full_form_button.move(80, 35)
+        self.dataGroupBox.full_form_button.move(220, 35)
         self.dataGroupBox.full_form_button.show()
 
         logging.debug('Root manager "%u" created', idx)
@@ -129,13 +149,21 @@ class RootManager:
         communicator.get_root_translation(self.index, self.rootWord)
 
     def set_translation(self, trans_word):
-        self.dataGroupBox.textEdit.setPlainText(self.rootWord + "  " + trans_word)
+        self.dataGroupBox.transTextEdit = QTextEdit(self.dataGroupBox)
+        self.dataGroupBox.transTextEdit.setReadOnly(True)
+        self.dataGroupBox.transTextEdit.setPlainText(trans_word)
+        self.dataGroupBox.rootTextEdit.resize(150, 30)
+        self.dataGroupBox.rootTextEdit.show()
+        self.dataGroupBox.transTextEdit.resize(150, 30)
+        self.dataGroupBox.transTextEdit.move(150, 5)
+        self.dataGroupBox.transTextEdit.show()
 
     def __del__(self):
         self.dataGroupBox.deleteLater()
         logging.debug('RootManager deleted')
 
 
+#=====================================================================================================
 def su_front_main_func(inp_q, outp_q):
 
     global voc_agent
@@ -146,4 +174,6 @@ def su_front_main_func(inp_q, outp_q):
     app = QApplication(sys.argv)
     window = SuMainWindow()
     window.show()
+    logging.debug('Before exit')
     sys.exit(app.exec_())
+    logging.debug('After exit')

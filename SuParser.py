@@ -7,6 +7,7 @@ ROOT = "root"
 FULL_FORM = "full_form"
 TRANSLATE = "translate"
 TRANS_RESULT = "translation"
+EXIT_APP = "exit_app"
 
 class SuParser():
     def __init__(self, key_list):

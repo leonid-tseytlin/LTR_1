@@ -24,13 +24,16 @@ class SuVocFrontAgent():
         self.createListener(cbFn)
         self.outp_q.put(json.dumps({SuParser.STARTING: starting}))
 
-    def get_root_translation(self, root, cbFn):
+    def get_translation_by_root(self, root, cbFn):
         self.createListener(cbFn)
         self.outp_q.put(json.dumps({SuParser.TRANSLATE: root}))
 
     def get_full_form_by_root(self, root):
         self.outp_q.put(json.dumps({SuParser.ROOT: root}))
 
+    def send_exit_app_to_voc(self):
+        self.outp_q.put(json.dumps({SuParser.EXIT_APP: ""}))
+
     def createListener(self, cbFn):
-        t1 = threading.Thread(target=self.listenThreadFunc, args=(self.inp_q, cbFn))
-        t1.start()
+        listen_thread = threading.Thread(target=self.listenThreadFunc, args=(self.inp_q, cbFn))
+        listen_thread.start()

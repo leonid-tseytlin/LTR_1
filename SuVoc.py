@@ -59,7 +59,7 @@ class SuVocabulary():
             SuParser.TRANSLATE: SuParser.TRANS_RESULT,
             SuParser.ROOT: SuParser.FULL_FORM,
         }
-        self.parser = SuParser.SuParser((SuParser.STARTING, SuParser.ROOT, SuParser.TRANSLATE))
+        self.parser = SuParser.SuParser((SuParser.STARTING, SuParser.ROOT, SuParser.TRANSLATE, SuParser.EXIT_APP))
 
         self.words = []
         self.roots = []
@@ -69,7 +69,8 @@ class SuVocabulary():
 def su_voc_main_func(inp_q, outp_q):
     Voc = SuVocabulary()
 
-    while (True):
+    app_exit = False
+    while (app_exit == False):
         while not inp_q.empty():
             msg = inp_q.get()
             logging.debug('Message "%s" received', msg)
@@ -77,6 +78,10 @@ def su_voc_main_func(inp_q, outp_q):
             key, parsed_data = Voc.parser.parse(msg)
             logging.debug(key)
             logging.debug(parsed_data)
+
+            if key == SuParser.EXIT_APP:
+                app_exit = True
+                break
 
             outData = Voc.handler_fn[key](parsed_data)
             logging.debug('output data: %s', outData)
