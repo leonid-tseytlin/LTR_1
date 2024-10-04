@@ -1,9 +1,11 @@
 import json
 import logging
 
-STARTING = "start"
-ROOTS_LIST = "roots_list"
 ROOT = "root"
+WORD_CLASS = "class"
+GET_ROOTS = "get_roots"
+ROOTS_LIST = "roots_list"
+GET_FORM = "get_form"
 FULL_FORM = "full_form"
 TRANSLATE = "translate"
 TRANS_RESULT = "translation"

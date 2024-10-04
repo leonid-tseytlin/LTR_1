@@ -1,144 +1,183 @@
 ---
-  verb:
+  word_class: "verb"
+  rules:
+    word_mods:
+        conjugation:
+            present:
+            past:
+            conditional:
+            imperative:
+    form_names:
+        conjugation:
+                - minä
+                - sinä
+                - hän
+                - me
+                - te
+                - he
+                - passive
+  words:
     -
         root: istua
         trans: сидеть
-        conj:
-            -
-              - istuin
-              - istuit
-              - istui
-              - istui
-              - istuimme
-              - istuitte
-              - istuivat
-            -
-              - istun
-              - istut
-              - istuu
-              - istuu
-              - istumme
-              - istutte
-              - istuvat
+        word_mods:
+          conjugation:
+              present:
+                - istun
+                - istut
+                - istuu
+                - istumme
+                - istutte
+                - istuvat
+                - istutaan
+              past:
+                - istuin
+                - istuit
+                - istui
+                - istuimme
+                - istuitte
+                - istuivat
+                - istuttiin
+              conditional:
+                - istuisin
+                - istuisit
+                - istuisi
+                - istuisimme
+                - istuisitte
+                - istuisivat
+                - istuttaisiin
+              imperative:
+                - ~
+                - istu
+                - istukoon
+                - istukaamme
+                - istukaa
+                - istukoot
+                - istuttakoon
     -
         root: nähdä
         trans: видеть
-        conj:
-            -
-              - näin
-              - näit
-              - näki
-              - näki
-              - näimme
-              - näitte
-              - näkivat
-            -
-              - näen
-              - näet
-              - näkee
-              - näkee
-              - näemme
-              - näette
-              - näkevät
+        word_mods:
+          conjugation:
+              present:
+                - näen
+                - näet
+                - näkee
+                - näemme
+                - näette
+                - näkevät
+                - ~
+              past:
+                - näin
+                - näit
+                - näki
+                - näimme
+                - näitte
+                - näkivat
+                - ~
     -
         root: näyttää
         trans: показывать
-        conj:
-            -
-              - näytin
-              - näytit
-              - näytti
-              - näytti
-              - näytimme
-              - näytitte
-              - näyttivät
-            -
-              - näytän
-              - näytät
-              - näyttää
-              - näyttää
-              - näytämme
-              - näytätte
-              - näyttävät
+        word_mods:
+          conjugation:
+              present:
+                - näytän
+                - näytät
+                - näyttää
+                - näytämme
+                - näytätte
+                - näyttävät
+                - ~
+              past:
+                - näytin
+                - näytit
+                - näytti
+                - näytimme
+                - näytitte
+                - näyttivät
+                - ~
     -
         root: kysyä
         trans: спрашивать
-        conj:
-            -
-              - kysyin
-              - kysyit
-              - kysyi
-              - kysyi
-              - kysyimme
-              - kysyitte
-              - kysyivät
-            -
-              - kysyn
-              - kysyt
-              - kysyy
-              - kysyy
-              - kysymme
-              - kysytte
-              - kysyvät
+        word_mods:
+          conjugation:
+              present:
+                - kysyn
+                - kysyt
+                - kysyy
+                - kysymme
+                - kysytte 
+                - kysyvät
+                - ~
+              past:
+                - kysyin
+                - kysyit
+                - kysyi
+                - kysyimme
+                - kysyitte
+                - kysyivät
+                - ~
     -
         root: puhua
         trans: говорить
-        conj:
-            -
-              - puhuin
-              - puhuit
-              - puhui
-              - puhui
-              - puhuimme
-              - puhuitte
-              - puhuivat
-            -
-              - puhun
-              - puhut
-              - puhuu
-              - puhuu
-              - puhumme
-              - puhutte
-              - puhuvat
+        word_mods:
+          conjugation:
+              present:
+                - puhun
+                - puhut
+                - puhuu
+                - puhumme
+                - puhutte
+                - puhuvat
+                - ~
+              past:
+                - puhuin
+                - puhuit
+                - puhui
+                - puhuimme
+                - puhuitte
+                - puhuivat
+                - ~
     -
         root: sanoa
         trans: сказать
-        conj:
-            -
-              - sanoin
-              - sanoit
-              - sanoi
-              - sanoi
-              - sanoimme
-              - sanoitte
-              - sanoivat
-            -
-              - sanon
-              - sanot
-              - sanoo
-              - sanoo
-              - sanomme
-              - sanotte
-              - sanovat
+        word_mods:
+          conjugation:
+              present:
+                - sanon
+                - sanot
+                - sanoo
+                - sanomme
+                - sanotte
+                - sanovat
+                - ~
+              past:
+                - sanoin
+                - sanoit
+                - sanoi
+                - sanoimme
+                - sanoitte
+                - sanoivat
+                - ~
     -
         root: kulkea
         trans: идти
-        conj:
-            -
-              - kuljin
-              - kuljit
-              - kulki
-              - kulki
-              - kuljimme
-              - kuljitte
-              - kulkivat
-            -
-              - kuljen
-              - kuljet
-              - kulkee
-              - kulkee
-              - kuljemme
-              - kuljette
-              - kulkevat
-              
+        word_mods:
+          conjugation:
+              present:
+                - kuljen
+                - kuljet
+                - kulkee
+                - kuljemme
+                - kuljette
+                - kulkevat
+                - ~
+              past:
+                - kuljin
+                - kuljit
+                - kulki
+                - kuljimme
+                - kuljitte
+                - kulkivat
+                - ~
               
