@@ -25,27 +25,32 @@ class SuVocabulary():
 
     def handle_get_roots(self, data):
         logging.debug(data)
-#        rootsList = self.getRootsByKey(data)
         roots_list = list(filter(lambda x: x.startswith(data), self.roots))
         logging.debug('roots list: %s', roots_list)
         roots_and_class_list = []
         for root in roots_list:
             idx = self.roots.index(root)
             word_class = self.words[idx].getWordClass()
-            roots_and_class_list.append({SuParser.ROOT: root, SuParser.WORD_CLASS: word_class})
+            roots_and_class_list.append({SuCommon.ROOT: root, SuCommon.WORD_CLASS: word_class})
         logging.debug(roots_and_class_list)
         return roots_and_class_list
 
     def handle_translate(self, data):
         logging.info(data)
-        idx = self.roots.index(data)
+        idx = self.roots.index(data[SuCommon.ROOT])
         trans = self.words[idx].getTrans()
         return trans
 
     def handle_get_form(self, data):
         logging.info(data)
         idx = self.roots.index(data)
-        forms = self.words[idx].getForms()
+        forms = self.words[idx].get_word_mods()
+        return forms
+
+    def handle_get_mods(self, data):
+        logging.info(data)
+        idx = self.roots.index(data[SuCommon.ROOT])
+        forms = self.words[idx].get_word_mods(data[SuCommon.MODS_LIST])
         return forms
 
 
@@ -60,16 +65,16 @@ class SuVocabulary():
 #            logging.debug(list(my_keys))
 
         self.handler_fn = {
-            SuParser.GET_ROOTS: self.handle_get_roots,
-            SuParser.TRANSLATE: self.handle_translate,
-            SuParser.GET_FORM: self.handle_get_form,
-        }
+            SuCommon.GET_ROOTS: self.handle_get_roots,
+            SuCommon.TRANSLATE: self.handle_translate,
+            SuCommon.GET_MODS: self.handle_get_mods,
+         }
         self.res_code = {
-            SuParser.GET_ROOTS: SuParser.ROOTS_LIST,
-            SuParser.TRANSLATE: SuParser.TRANS_RESULT,
-            SuParser.GET_FORM: SuParser.FULL_FORM,
+            SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
+            SuCommon.TRANSLATE: SuCommon.TRANSLATION,
+            SuCommon.GET_MODS: SuCommon.WORD_MODS,
         }
-        self.parser = SuParser.SuParser((SuParser.GET_ROOTS, SuParser.GET_FORM, SuParser.TRANSLATE, SuParser.EXIT_APP))
+        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.TRANSLATE, SuCommon.EXIT_APP))
 
         self.words = []
         self.roots = []
@@ -89,7 +94,7 @@ def su_voc_main_func(inp_q, outp_q):
             logging.debug(key)
             logging.debug(parsed_data)
 
-            if key == SuParser.EXIT_APP:
+            if key == SuCommon.EXIT_APP:
                 app_exit = True
                 break
 
@@ -100,18 +105,3 @@ def su_voc_main_func(inp_q, outp_q):
             outp_q.put(json.dumps({voc.res_code[key]: out_data}))
 
 
-
-
-"""
-    def myFunc(self, word):
-        print(word.getRoot())
-        print(self.key)
-        if word.getRoot().startswith(self.key):
-            return True
-        else:
-            return False
-
-    def findRoot(self, key):
-        self.key = key
-        return list(filter(self.myFunc, self.words))
-"""

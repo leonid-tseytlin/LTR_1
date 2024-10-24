@@ -1,16 +1,6 @@
 import json
 import logging
 
-ROOT = "root"
-WORD_CLASS = "class"
-GET_ROOTS = "get_roots"
-ROOTS_LIST = "roots_list"
-GET_FORM = "get_form"
-FULL_FORM = "full_form"
-TRANSLATE = "translate"
-TRANS_RESULT = "translation"
-EXIT_APP = "exit_app"
-
 class SuParser():
     def __init__(self, key_list):
         self.key_list = key_list

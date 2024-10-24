@@ -1,8 +1,6 @@
 from multiprocessing import Process, Queue, Lock
 import SuVoc
-import SuParser
 import SuFront
-import json
 import logging
 
 if __name__ == '__main__':

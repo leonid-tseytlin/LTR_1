@@ -4,6 +4,7 @@ import logging
 class SuWord():
     def __init__(self, word_class):
         self.wordClass = word_class
+        self.forms = {}
 
     def getWordClass(self):
         return self.wordClass
@@ -29,25 +30,33 @@ class SuVerb(SuWord):
 
     def __init__(self, word_class, data):
         super().__init__(word_class)
-        self.root = data["root"]
-        self.trans = data["trans"]
-        key_list = list(data["word_mods"])
-        self.word_mods = {}
-        for key in key_list:
-            self.word_mods[key] = data["word_mods"][key]
-#        logging.debug(self.word_mods)
+        self.root = data[SuCommon.ROOT]
+        self.trans = data[SuCommon.TRANSLATION]
+        key_list = list(data[SuCommon.WORD_MODS])
+        self.forms[SuCommon.WORD_MODS] = data[SuCommon.WORD_MODS]
+#        for key in key_list:
+#            self.word_mods[key] = data["word_mods"][key]
+        logging.debug(self.forms[SuCommon.WORD_MODS])
 
     def getRoot(self):
         return self.root
 
     def getForms(self):
-        return self.word_mods
+        return self.forms[SuCommon.WORD_MODS]
 
     def getTrans(self):
         return self.trans
 
-    def getConj(self, key):
-        return self.word_mods[key]
+    def get_word_mods(self, mods_list):
+        logging.debug(mods_list)
+        word_mods_tmp = self.forms
+        for mod in mods_list:
+            logging.debug(mod)
+            logging.debug(word_mods_tmp)
+            word_mods_tmp = word_mods_tmp[mod]
+            key_list = list(word_mods_tmp.keys())
+            logging.debug(key_list)
+        return key_list
 
 #######################################################################
 
