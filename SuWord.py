@@ -3,14 +3,15 @@ import logging
 
 class SuWord():
     def __init__(self, word_class):
+        self.root = None
         self.wordClass = word_class
         self.forms = {}
 
     def getWordClass(self):
         return self.wordClass
 
-    def getRoot(self):
-        return None
+    def get_root(self):
+        return self.root
 
 #######################################################################
 class SuNoun(SuWord):
@@ -18,9 +19,6 @@ class SuNoun(SuWord):
     def __init__(self, data):
         self.root = "Not implemented"
         self.conj = "Not implemented"
-
-    def getRoot(self):
-        return self.root
 
     def getConj(self, key):
         return "Noun still not implemented"
@@ -38,13 +36,17 @@ class SuVerb(SuWord):
 #            self.word_mods[key] = data["word_mods"][key]
         logging.debug(self.forms[SuCommon.WORD_MODS])
 
-    def getRoot(self):
-        return self.root
+    def get_word_forms(self, mods_list):
+        logging.debug(mods_list)
+        word_forms_tmp = self.forms
+        for mod in mods_list:
+#            logging.debug(mod)
+#            logging.debug(word_forms_tmp)
+            word_forms_tmp = word_forms_tmp[mod]
+        logging.debug(word_forms_tmp)
+        return word_forms_tmp
 
-    def getForms(self):
-        return self.forms[SuCommon.WORD_MODS]
-
-    def getTrans(self):
+    def get_translation(self):
         return self.trans
 
     def get_word_mods(self, mods_list):
@@ -54,8 +56,8 @@ class SuVerb(SuWord):
             logging.debug(mod)
             logging.debug(word_mods_tmp)
             word_mods_tmp = word_mods_tmp[mod]
-            key_list = list(word_mods_tmp.keys())
-            logging.debug(key_list)
+        key_list = list(word_mods_tmp.keys())
+        logging.debug(key_list)
         return key_list
 
 #######################################################################

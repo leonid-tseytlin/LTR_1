@@ -6,22 +6,23 @@ import SuParser
 import json
 import logging
 
-file_name = "./su_verbs.yaml"
+file_name = "./su_verbs.yaml" #Temporary. Should be defined by configuration
 
 
 class SuVocabulary():
 
-    def build(self, data):
+    def build_words(self, data):
         for word in data["words"]:
-            self.words.append(SuWord.SuVerb(data["word_class"], word))
+            self.words.append(SuWord.SuVerb(data[SuCommon.WORD_CLASS], word))
             self.roots.append(word["root"])
 
-        self.words.append(SuWord.SuNoun(""))
-        logging.debug('%u %s', len(self.words), 'words')
-#        for word in self.words:
-#            logging.debug(word.getConj(SuCommon.Tenses.PAST))
-
         logging.debug(self.roots)
+
+    def build_rules(self, data):
+        self.rules[data[SuCommon.WORD_CLASS]] = data["rules"]
+        logging.debug(self.rules)
+        #            logging.debug(data["rules"]["word_mods"])
+
 
     def handle_get_roots(self, data):
         logging.debug(data)
@@ -38,48 +39,48 @@ class SuVocabulary():
     def handle_translate(self, data):
         logging.info(data)
         idx = self.roots.index(data[SuCommon.ROOT])
-        trans = self.words[idx].getTrans()
+        trans = self.words[idx].get_translation()
         return trans
 
-    def handle_get_form(self, data):
+    def handle_get_forms(self, data):
         logging.info(data)
-        idx = self.roots.index(data)
-        forms = self.words[idx].get_word_mods()
+        idx = self.roots.index(data[SuCommon.ROOT])
+        forms = self.words[idx].get_word_forms(data[SuCommon.MODS_LIST])
         return forms
 
     def handle_get_mods(self, data):
         logging.info(data)
         idx = self.roots.index(data[SuCommon.ROOT])
-        forms = self.words[idx].get_word_mods(data[SuCommon.MODS_LIST])
-        return forms
+        mods = self.words[idx].get_word_mods(data[SuCommon.MODS_LIST])
+        return mods
 
 
     def __init__(self):
-        with open(file_name, 'r') as f:
-            logging.info(f'Open {file_name}')
-            data = yaml.safe_load(f)
-            logging.debug(data["rules"])
-            logging.debug(data["rules"]["word_mods"])
-#            logging.debug(data["rules"]["word_mods"].keys())
-#            my_keys = data["words"][0]["conj"].keys()
-#            logging.debug(list(my_keys))
 
         self.handler_fn = {
             SuCommon.GET_ROOTS: self.handle_get_roots,
             SuCommon.TRANSLATE: self.handle_translate,
             SuCommon.GET_MODS: self.handle_get_mods,
-         }
+            SuCommon.GET_FORMS: self.handle_get_forms,
+        }
         self.res_code = {
             SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
             SuCommon.TRANSLATE: SuCommon.TRANSLATION,
-            SuCommon.GET_MODS: SuCommon.WORD_MODS,
+            SuCommon.GET_MODS: SuCommon.MODS_LIST,
+            SuCommon.GET_FORMS: SuCommon.FORMS_LIST,
         }
-        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.TRANSLATE, SuCommon.EXIT_APP))
+        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE, SuCommon.EXIT_APP))
 
         self.words = []
         self.roots = []
+        self.rules = {}
 
-        self.build(data)
+        with open(file_name, 'r') as f:
+            logging.info(f'Open {file_name}')
+            data = yaml.safe_load(f)
+
+            self.build_words(data)
+            self.build_rules(data)
 
 def su_voc_main_func(inp_q, outp_q):
     voc = SuVocabulary()
