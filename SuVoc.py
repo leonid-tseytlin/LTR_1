@@ -54,6 +54,8 @@ class SuVocabulary():
         mods = self.words[idx].get_word_mods(data[SuCommon.MODS_LIST])
         return mods
 
+    def handle_get_rules(self, data):
+        return self.rules
 
     def __init__(self):
 
@@ -62,14 +64,16 @@ class SuVocabulary():
             SuCommon.TRANSLATE: self.handle_translate,
             SuCommon.GET_MODS: self.handle_get_mods,
             SuCommon.GET_FORMS: self.handle_get_forms,
+            SuCommon.GET_RULES: self.handle_get_rules,
         }
         self.res_code = {
             SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
             SuCommon.TRANSLATE: SuCommon.TRANSLATION,
             SuCommon.GET_MODS: SuCommon.MODS_LIST,
             SuCommon.GET_FORMS: SuCommon.FORMS_LIST,
+            SuCommon.GET_RULES: SuCommon.RULES,
         }
-        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE, SuCommon.EXIT_APP))
+        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE, SuCommon.GET_RULES, SuCommon.EXIT_APP))
 
         self.words = []
         self.roots = []
