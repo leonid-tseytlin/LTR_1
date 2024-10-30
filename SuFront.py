@@ -1,14 +1,12 @@
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QVBoxLayout, QTextEdit, QTableWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QTextEdit
 import threading
 import logging
 import SuCommon
 import SuVocConnector
 import SuRulesManager
-
-rules_manager = None
-connector = None
+import SuFormsManager
 
 class SuMainWindow(QMainWindow):
     stop_event = threading.Event()
@@ -42,12 +40,12 @@ class SuMainWindow(QMainWindow):
                     self.session.delete_root_managers()
                     del self.session
                 self.session = VocComSession(self)
-                connector.get_roots_by_starting(starting, self.session.add_root_managers)
+                SuVocConnector.connector.get_roots_by_starting(starting, self.session.add_root_managers)
 
     def closeEvent(self, event):
         logging.debug('closeEvent called')
         self.stop_event.set()
-        connector.send_exit_app_to_voc()
+        SuVocConnector.connector.send_exit_app_to_voc()
 
     def __del__(self):
         logging.debug('Main Window deleted')
@@ -79,7 +77,7 @@ class VocComSession:
     def set_form_mods(self, mods_list):
         if not self.formsManager:
             logging.debug('Trying to create forms manager')
-            self.formsManager = FormsManager(self,
+            self.formsManager = SuFormsManager.FormsManager(self,
                                              self.rootManagers[self.currentRootTransactionIdx].get_root_word(),
                                              self.rootManagers[self.currentRootTransactionIdx].get_class_word())
         for mod_name in mods_list:
@@ -157,14 +155,14 @@ class RootManager:
 
     def translate_button_click(self):
         self.currentSession.start_root_transaction(self.index)
-        connector.get_root_translation(self.rootWord, self.currentSession.set_root_translation)
+        SuVocConnector.connector.get_root_translation(self.rootWord, self.currentSession.set_root_translation)
 
     def get_mods_button_click(self):
         self.currentSession.delete_form_mods()
         self.currentSession.start_root_transaction(self.index)
         self.currentSession.update_mod_hierarchy(SuCommon.WORD_MODS)
         mods_hierarchy_list = self.currentSession.get_mod_hierarchy()
-        connector.get_mods_by_root(self.rootWord, mods_hierarchy_list, self.currentSession.set_form_mods)
+        SuVocConnector.connector.get_mods_by_root(self.rootWord, mods_hierarchy_list, self.currentSession.set_form_mods)
 
     def set_translation(self, trans_word):
         self.dataGroupBox.transTextEdit = QTextEdit(self.dataGroupBox)
@@ -190,70 +188,10 @@ class RootManager:
 
 
 #=====================================================================================================
-class FormsManager:
-    horStep = 160
-    vertStep = 100
-
-    def __init__(self, session, root_word, class_word):
-        self.session = session
-        self.rootWord = root_word
-        self.classWord = class_word
-        self.formsGroupBox = QGroupBox("Forms", self.session.mainWindow)
-        self.formsGroupBox.resize(1060, 800)
-        self.formsGroupBox.move(400, 30)
-        self.formsGroupBox.formButtons = []
-        self.formsGroupBox.show()
-
-    class ModButton(QPushButton):
-        def __init__(self, manager_instance, title, x_idx, y_idx):
-            super().__init__(title, manager_instance.formsGroupBox)
-            self.title = title
-            self.manager_instance = manager_instance
-            self.move(20 + x_idx * manager_instance.horStep, 50 + y_idx * manager_instance.vertStep)
-            self.clicked.connect(self.get_mods_button_click)
-            self.show()
-
-        def get_mods_button_click(self):
-            mod_depth = self.manager_instance.session.get_mod_depth()
-            logging.debug('mod_depth "%u"', mod_depth)
-            hierarchy_list = (self.manager_instance.session.get_mod_hierarchy()).copy()
-            hierarchy_list.append(self.title)
-            logging.debug(hierarchy_list)
-            hier_status = rules_manager.get_hierarchy_status(self.manager_instance.classWord, hierarchy_list)
-            logging.debug(hier_status)
-
-            if hier_status == SuRulesManager.HIER_INTER:
-                self.manager_instance.session.update_mod_hierarchy(self.title)
-                logging.debug('mods_hierarchy_list "%s"', hierarchy_list)
-                connector.get_mods_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.session.set_form_mods)
-            elif hier_status == SuRulesManager.HIER_FINAL:
-                logging.debug('mods_hierarchy_list "%s"', hierarchy_list)
-                connector.get_forms_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.session.set_word_forms)
-                table = QTableWidget()
-                table.setRowCount(2)
-                table.setColumnCount(7)
-                table.show
-
-            else:
-                logging.error('wrong mods_hierarchy_list "%s"', hierarchy_list)
-
-    def create_form_button(self, title, x_idx, y_idx):
-        form_button = self.ModButton(self, title, x_idx, y_idx)
-        self.formsGroupBox.formButtons.append(form_button)
-
-    def destroy_group_box(self):
-        self.formsGroupBox.deleteLater()
-
-    def __del__(self):
-        logging.debug('FormsManager deleted')
-
-#=====================================================================================================
 def su_front_main_func(inp_q, outp_q):
 
-    global connector
-    connector = SuVocConnector.SuVocConnector(inp_q, outp_q)
-    global rules_manager
-    rules_manager = SuRulesManager.RulesManager(connector)
+    SuVocConnector.init_connector(inp_q, outp_q)
+    SuRulesManager.init_rules_manager()
 
     app = QApplication(sys.argv)
     window = SuMainWindow()

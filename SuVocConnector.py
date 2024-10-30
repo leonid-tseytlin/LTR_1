@@ -6,6 +6,8 @@ import SuParser
 import PyQt5
 from PyQt5.QtWidgets import QGraphicsObject
 
+connector = None
+
 class SuVocConnector(QGraphicsObject):
     strSignal = PyQt5.QtCore.pyqtSignal(str)
     listSignal = PyQt5.QtCore.pyqtSignal(list)
@@ -93,3 +95,6 @@ class SuVocConnector(QGraphicsObject):
     def send_exit_app_to_voc(self):
         self.outp_q.put(json.dumps({SuCommon.EXIT_APP: ""}))
 
+def init_connector(inp_q, outp_q):
+    global connector
+    connector = SuVocConnector(inp_q, outp_q)

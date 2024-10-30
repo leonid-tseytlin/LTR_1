@@ -6,12 +6,14 @@ HIER_FINAL = 10
 HIER_INTER = 20
 HIER_WRONG = 0
 
+rules_manager = None;
+
 class RulesManager:
 
-    def __init__(self, connector):
+    def __init__(self):
         logging.debug('Rules Manager created')
         self.rules = None
-        connector.get_rules(self.set_rules)
+        SuVocConnector.connector.get_rules(self.set_rules)
 
     def set_rules(self, rules):
         self.rules = rules
@@ -36,3 +38,7 @@ class RulesManager:
 
     def get_max_depth(self, word_class):
         return 2 #Temporary!!!!
+
+def init_rules_manager():
+    global rules_manager
+    rules_manager = RulesManager()
