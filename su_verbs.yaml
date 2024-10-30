@@ -3,10 +3,10 @@
   rules:
     word_mods:
         conjugation:
-            - present
-            - past
-            - conditional
-            - imperative
+            present:
+            past:
+            conditional:
+            imperative:
     form_names:
         conjugation:
                 - minä

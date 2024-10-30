@@ -1,6 +1,6 @@
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QVBoxLayout, QGraphicsObject, QTextEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QVBoxLayout, QTextEdit, QTableWidget
 import threading
 import logging
 import SuCommon
@@ -216,16 +216,26 @@ class FormsManager:
         def get_mods_button_click(self):
             mod_depth = self.manager_instance.session.get_mod_depth()
             logging.debug('mod_depth "%u"', mod_depth)
-            if mod_depth < rules_manager.get_max_depth(self.manager_instance.classWord):
+            hierarchy_list = (self.manager_instance.session.get_mod_hierarchy()).copy()
+            hierarchy_list.append(self.title)
+            logging.debug(hierarchy_list)
+            hier_status = rules_manager.get_hierarchy_status(self.manager_instance.classWord, hierarchy_list)
+            logging.debug(hier_status)
+
+            if hier_status == SuRulesManager.HIER_INTER:
                 self.manager_instance.session.update_mod_hierarchy(self.title)
-                mods_hierarchy_list = self.manager_instance.session.get_mod_hierarchy()
-                logging.debug('mods_hierarchy_list "%s"', mods_hierarchy_list)
-                connector.get_mods_by_root(self.manager_instance.rootWord, mods_hierarchy_list, self.manager_instance.session.set_form_mods)
+                logging.debug('mods_hierarchy_list "%s"', hierarchy_list)
+                connector.get_mods_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.session.set_form_mods)
+            elif hier_status == SuRulesManager.HIER_FINAL:
+                logging.debug('mods_hierarchy_list "%s"', hierarchy_list)
+                connector.get_forms_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.session.set_word_forms)
+                table = QTableWidget()
+                table.setRowCount(2)
+                table.setColumnCount(7)
+                table.show
+
             else:
-                mods_hierarchy_list = (self.manager_instance.session.get_mod_hierarchy()).copy()
-                mods_hierarchy_list.append(self.title)
-                logging.debug('mods_hierarchy_list "%s"', mods_hierarchy_list)
-                connector.get_forms_by_root(self.manager_instance.rootWord, mods_hierarchy_list, self.manager_instance.session.set_word_forms)
+                logging.error('wrong mods_hierarchy_list "%s"', hierarchy_list)
 
     def create_form_button(self, title, x_idx, y_idx):
         form_button = self.ModButton(self, title, x_idx, y_idx)
