@@ -57,46 +57,25 @@ class VocComSession:
         self.rootManagers = []
         self.formsManager = None
         self.currentRootTransactionIdx = None
-        self.currentHierarchyList = []
 
     def add_root_managers(self, roots_and_class):
         for root_and_class in roots_and_class:
             new_idx = len(self.rootManagers)
             self.rootManagers.append(RootManager(self, root_and_class[SuCommon.ROOT], root_and_class[SuCommon.WORD_CLASS], new_idx))
 
-    def start_root_transaction(self, trans_idx):
-        self.currentHierarchyList = []
-        self.currentRootTransactionIdx = trans_idx
-
-    def update_mod_hierarchy(self, mod_name):
-        self.currentHierarchyList.append(mod_name)
-
-    def get_mod_hierarchy(self):
-        return self.currentHierarchyList
-
-    def set_form_mods(self, mods_list):
-        if not self.formsManager:
-            logging.debug('Trying to create forms manager')
-            self.formsManager = SuFormsManager.FormsManager(self,
-                                             self.rootManagers[self.currentRootTransactionIdx].get_root_word(),
-                                             self.rootManagers[self.currentRootTransactionIdx].get_class_word())
-        for mod_name in mods_list:
-            logging.debug('Adding button %s', mod_name)
-            self.formsManager.create_form_button(mod_name, self.get_mod_depth(), mods_list.index(mod_name))
-
-    def set_word_forms(self, forms_list):
-        logging.debug('Forms received %s', forms_list)
-
-    def get_mod_depth(self):
-        return len(self.currentHierarchyList)
+    def create_form_mods(self, root_idx):
+        self.delete_form_mods()
+        logging.debug('Trying to create forms manager')
+        self.formsManager = SuFormsManager.FormsManager(self,
+                                                        self.rootManagers[root_idx].get_root_word(),
+                                                        self.rootManagers[root_idx].get_class_word())
 
     def delete_form_mods(self):
         logging.debug('delete_form_mods')
         if self.formsManager:
             logging.debug('Trying to delete forms manager')
-            self.formsManager.destroy_group_box()
+            self.formsManager.self_destroy()
         self.formsManager = None
-        self.currentHierarchyList = []
 
     def set_root_translation(self, trans_word):
         self.rootManagers[self.currentRootTransactionIdx].set_translation(trans_word)
@@ -154,15 +133,12 @@ class RootManager:
         logging.debug('Root manager "%u" created', idx)
 
     def translate_button_click(self):
-        self.currentSession.start_root_transaction(self.index)
+        self.currentSession.currentRootTransactionIdx = self.index
+        logging.debug('currentRootTransactionIdx "%u" set', self.currentSession.currentRootTransactionIdx)
         SuVocConnector.connector.get_root_translation(self.rootWord, self.currentSession.set_root_translation)
 
     def get_mods_button_click(self):
-        self.currentSession.delete_form_mods()
-        self.currentSession.start_root_transaction(self.index)
-        self.currentSession.update_mod_hierarchy(SuCommon.WORD_MODS)
-        mods_hierarchy_list = self.currentSession.get_mod_hierarchy()
-        SuVocConnector.connector.get_mods_by_root(self.rootWord, mods_hierarchy_list, self.currentSession.set_form_mods)
+        self.currentSession.create_form_mods(self.index)
 
     def set_translation(self, trans_word):
         self.dataGroupBox.transTextEdit = QTextEdit(self.dataGroupBox)

@@ -13,14 +13,25 @@ class FormsManager:
     vertStep = 100
 
     def __init__(self, session, root_word, class_word):
-        self.session = session
+        self.currentSession = session
         self.rootWord = root_word
         self.classWord = class_word
-        self.formsGroupBox = QGroupBox("Forms", self.session.mainWindow)
+        self.formsGroupBox = QGroupBox("Forms", self.currentSession.mainWindow)
         self.formsGroupBox.resize(1060, 800)
         self.formsGroupBox.move(400, 30)
         self.formsGroupBox.formButtons = []
         self.formsGroupBox.show()
+
+        self.currentHierarchyList = [SuCommon.WORD_MODS]
+        SuVocConnector.connector.get_mods_by_root(self.rootWord, [SuCommon.WORD_MODS], self.set_form_mods)
+
+    def set_form_mods(self, mods_list):
+        for mod_name in mods_list:
+            logging.debug('Adding button %s', mod_name)
+            self.create_form_button(mod_name, len(self.currentHierarchyList), mods_list.index(mod_name))
+
+    def set_word_forms(self, forms_list):
+        logging.debug('Forms received %s', forms_list)
 
     class ModButton(QPushButton):
         def __init__(self, manager_instance, title, x_idx, y_idx):
@@ -32,21 +43,21 @@ class FormsManager:
             self.show()
 
         def get_mods_button_click(self):
-            mod_depth = self.manager_instance.session.get_mod_depth()
+            mod_depth = len(self.manager_instance.currentHierarchyList)
             logging.debug('mod_depth "%u"', mod_depth)
-            hierarchy_list = (self.manager_instance.session.get_mod_hierarchy()).copy()
+            hierarchy_list = self.manager_instance.currentHierarchyList.copy()
             hierarchy_list.append(self.title)
             logging.debug(hierarchy_list)
             hier_status = SuRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord, hierarchy_list)
             logging.debug(hier_status)
 
             if hier_status == SuRulesManager.HIER_INTER:
-                self.manager_instance.session.update_mod_hierarchy(self.title)
+                self.manager_instance.currentHierarchyList.append(self.title)
                 logging.debug('mods_hierarchy_list "%s"', hierarchy_list)
-                SuVocConnector.connector.get_mods_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.session.set_form_mods)
+                SuVocConnector.connector.get_mods_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.set_form_mods)
             elif hier_status == SuRulesManager.HIER_FINAL:
                 logging.debug('mods_hierarchy_list "%s"', hierarchy_list)
-                SuVocConnector.connector.get_forms_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.session.set_word_forms)
+                SuVocConnector.connector.get_forms_by_root(self.manager_instance.rootWord, hierarchy_list, self.manager_instance.set_word_forms)
 
                 rootTextEdit = QTextEdit(self.manager_instance.formsGroupBox)
                 rootTextEdit.setReadOnly(True)
@@ -62,7 +73,7 @@ class FormsManager:
         form_button = self.ModButton(self, title, x_idx, y_idx)
         self.formsGroupBox.formButtons.append(form_button)
 
-    def destroy_group_box(self):
+    def self_destroy(self):
         self.formsGroupBox.deleteLater()
 
     def __del__(self):
