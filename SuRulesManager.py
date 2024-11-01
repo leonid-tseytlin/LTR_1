@@ -36,8 +36,13 @@ class RulesManager:
 
         return HIER_INTER
 
-    def get_max_depth(self, word_class):
-        return 2 #Temporary!!!!
+    def get_form_names(self, word_class, form_list):
+        form_names_tmp = self.rules[word_class]
+        for form_name in form_list:
+            logging.debug(form_name)
+            form_names_tmp = form_names_tmp[form_name]
+
+        return form_names_tmp
 
 def init_rules_manager():
     global rules_manager

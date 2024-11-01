@@ -3,6 +3,7 @@ def enum(**enums):
 
 ROOT = "root"
 WORD_MODS = "word_mods"
+FORM_NAMES = "form_names"
 WORD_CLASS = "word_class"
 RULES = "rules"
 
