@@ -36,6 +36,14 @@ class RulesManager:
 
         return HIER_INTER
 
+    def get_word_mods(self, word_class, hierarchy):
+        word_mods_tmp = self.rules[word_class]
+        for word_mod in hierarchy:
+            logging.debug(word_mod)
+            word_mods_tmp = word_mods_tmp[word_mod]
+
+        return list(word_mods_tmp)
+
     def get_form_names(self, word_class, form_list):
         form_names_tmp = self.rules[word_class]
         for form_name in form_list:

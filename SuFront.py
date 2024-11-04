@@ -1,6 +1,6 @@
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QTextEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QTextEdit, QWidget, QComboBox
 import threading
 import logging
 import SuCommon
@@ -8,7 +8,7 @@ import SuVocConnector
 import SuRulesManager
 import SuFormsManager
 
-class SuMainWindow(QMainWindow):
+class SuMainWindow(QWidget):
     stop_event = threading.Event()
 
     def __init__(self):
@@ -23,7 +23,6 @@ class SuMainWindow(QMainWindow):
 
         self.read_input_thread = threading.Thread(target=self.read_input_thread_func, args=())
         self.read_input_thread.start()
-
 
     def read_input_thread_func(self):
         starting = ""

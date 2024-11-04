@@ -1,6 +1,6 @@
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QTextEdit, QPushButton, QGroupBox
+from PyQt5.QtWidgets import QTextEdit, QPushButton, QGroupBox, QComboBox
 import logging
 import SuFront
 import SuCommon
@@ -10,13 +10,16 @@ import SuRulesManager
 #=====================================================================================================
 class FormsManager:
     horStep = 160
-    vertStep = 100
+    vertStep = 80
+    horMargin = 20
+    vertMargin = 50
 
     def __init__(self, session, root_word, class_word):
         self.currentSession = session
         self.rootWord = root_word
         self.classWord = class_word
         self.formsTable = None
+        self.mod_selector = None
         self.formsGroupBox = QGroupBox("Forms", self.currentSession.mainWindow)
         self.formsGroupBox.resize(1060, 800)
         self.formsGroupBox.move(400, 30)
@@ -30,6 +33,20 @@ class FormsManager:
         for mod_name in mods_list:
             logging.debug('Adding button %s', mod_name)
             self.create_form_button(mod_name, len(self.currentHierarchyList) - 1, mods_list.index(mod_name))
+
+        rules_mods = SuRulesManager.rules_manager.get_word_mods(self.classWord, self.currentHierarchyList)
+        logging.debug('currentHierarchyList %s', self.currentHierarchyList)
+        logging.debug(mods_list)
+        logging.debug(rules_mods)
+
+        if rules_mods != mods_list:
+            new_mods_list = list(set(rules_mods) - set(mods_list))
+            logging.debug(new_mods_list)
+            self.mod_selector = self.NewModSelector(self, new_mods_list, len(self.currentHierarchyList) - 1, len(rules_mods), self.create_new_mod)
+
+    def create_new_mod(self, mod):
+        logging.debug("New Mod: " + mod)
+
 
     def set_word_forms(self, forms_list):
         logging.debug('Forms received %s', forms_list)
@@ -46,12 +63,33 @@ class FormsManager:
         self.formsGroupBox.formButtons.append(form_button)
 
     # =====================================================================================================
+    class NewModSelector:
+
+        def __init__(self, manager_instance, mods_list, x_idx, y_idx, cb_fn):
+            logging.debug(mods_list)
+            self.selCb = cb_fn
+            self.sel_combo_box = None
+            self.selection = None
+            self.sel_combo_box = QComboBox(manager_instance.formsGroupBox)
+            self.sel_combo_box.addItems(mods_list)
+            hor_position = manager_instance.horMargin + x_idx * manager_instance.horStep
+            vert_position = manager_instance.vertMargin + y_idx * manager_instance.vertStep
+            self.sel_combo_box.move(hor_position, vert_position)
+            self.sel_combo_box.textActivated.connect(self.update_label)
+            self.sel_combo_box.show()
+
+        def update_label(self):
+            self.selection = self.sel_combo_box.currentText()
+            logging.debug("Selected Item: " + self.selection)
+            self.selCb(self.selection)
+
+    # =====================================================================================================
     class ModButton(QPushButton):
         def __init__(self, manager_instance, title, x_idx, y_idx):
             super().__init__(title, manager_instance.formsGroupBox)
             self.title = title
             self.manager_instance = manager_instance
-            self.move(20 + x_idx * manager_instance.horStep, 50 + y_idx * manager_instance.vertStep)
+            self.move(manager_instance.horMargin + x_idx * manager_instance.horStep, manager_instance.vertMargin + y_idx * manager_instance.vertStep)
             self.clicked.connect(self.get_mods_button_click)
             self.show()
 

@@ -30,7 +30,7 @@ class SuVerb(SuWord):
         super().__init__(word_class)
         self.root = data[SuCommon.ROOT]
         self.trans = data[SuCommon.TRANSLATION]
-        key_list = list(data[SuCommon.WORD_MODS])
+#        key_list = list(data[SuCommon.WORD_MODS])
         self.forms[SuCommon.WORD_MODS] = data[SuCommon.WORD_MODS]
 #        for key in key_list:
 #            self.word_mods[key] = data["word_mods"][key]
@@ -56,6 +56,8 @@ class SuVerb(SuWord):
             logging.debug(mod)
             logging.debug(word_mods_tmp)
             word_mods_tmp = word_mods_tmp[mod]
+        if not word_mods_tmp:
+            return []
         key_list = list(word_mods_tmp.keys())
         logging.debug(key_list)
         return key_list

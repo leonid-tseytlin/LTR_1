@@ -180,4 +180,8 @@
                 - kuljitte
                 - kulkivat
                 - ~
+    -
+        root: avata
+        translation: открыть
+        word_mods:
               
