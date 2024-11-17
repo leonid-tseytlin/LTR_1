@@ -92,6 +92,9 @@ class SuVocConnector(QGraphicsObject):
         self.create_listener(dict)
         self.outp_q.put(json.dumps({SuCommon.GET_RULES: ""}))
 
+    def set_new_form(self, root, new_form):
+        self.outp_q.put(json.dumps({SuCommon.SAVE_FORM: {SuCommon.ROOT: root, SuCommon.NEW_FORM: new_form}}))
+
     def send_exit_app_to_voc(self):
         self.outp_q.put(json.dumps({SuCommon.EXIT_APP: ""}))
 

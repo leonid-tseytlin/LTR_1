@@ -52,10 +52,18 @@ class SuVocabulary():
         logging.info(data)
         idx = self.roots.index(data[SuCommon.ROOT])
         mods = self.words[idx].get_word_mods(data[SuCommon.MODS_LIST])
+        logging.debug(mods)
         return mods
 
     def handle_get_rules(self, data):
         return self.rules
+
+    def handle_save_form(self, data):
+        logging.info(data)
+        idx = self.roots.index(data[SuCommon.ROOT])
+        self.words[idx].set_word_form(data[SuCommon.NEW_FORM])
+        return None
+
 
     def __init__(self):
 
@@ -65,6 +73,7 @@ class SuVocabulary():
             SuCommon.GET_MODS: self.handle_get_mods,
             SuCommon.GET_FORMS: self.handle_get_forms,
             SuCommon.GET_RULES: self.handle_get_rules,
+            SuCommon.SAVE_FORM: self.handle_save_form,
         }
         self.res_code = {
             SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
@@ -73,7 +82,8 @@ class SuVocabulary():
             SuCommon.GET_FORMS: SuCommon.FORMS_LIST,
             SuCommon.GET_RULES: SuCommon.RULES,
         }
-        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE, SuCommon.GET_RULES, SuCommon.EXIT_APP))
+        self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE,
+                                         SuCommon.GET_RULES, SuCommon.SAVE_FORM, SuCommon.EXIT_APP))
 
         self.words = []
         self.roots = []
@@ -93,7 +103,7 @@ def su_voc_main_func(inp_q, outp_q):
     while not app_exit:
         while not inp_q.empty():
             msg = inp_q.get()
-            logging.debug('Message "%s" received', msg)
+#            logging.debug('Message "%s" received', msg)
 
             key, parsed_data = voc.parser.parse(msg)
             logging.debug(key)
@@ -104,9 +114,10 @@ def su_voc_main_func(inp_q, outp_q):
                 break
 
             out_data = voc.handler_fn[key](parsed_data)
-            logging.debug('output data: %s', out_data)
-            json_out_data = json.dumps({voc.res_code[key]: out_data})
-            logging.debug('output data: %s', json_out_data)
-            outp_q.put(json.dumps({voc.res_code[key]: out_data}))
+            if out_data is not None:
+                logging.debug('output data: %s', out_data)
+                json_out_data = json.dumps({voc.res_code[key]: out_data})
+                logging.debug('output data: %s', json_out_data)
+                outp_q.put(json.dumps({voc.res_code[key]: out_data}))
 
 

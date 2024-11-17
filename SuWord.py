@@ -62,6 +62,32 @@ class SuVerb(SuWord):
         logging.debug(key_list)
         return key_list
 
-#######################################################################
+    def update_form(self, src_dict, dst_dict):
+        if dst_dict is None:
+            dst_dict = {}
+        for key, value in src_dict.items():
+            logging.debug('key: %s, value %s', key, value)
+            if key not in dst_dict:
+                logging.debug('adding key: %s', key)
+                dst_dict.update({key: value})
+                logging.debug(dst_dict)
+            elif type(value) != dict:
+                logging.debug('replacing value of key: %s', key)
+                dst_dict[key] = src_dict[key]
+                logging.debug(dst_dict)
+            else:
+                logging.debug('next level')
+                dst_dict[key] = self.update_form(value, dst_dict[key])
+                logging.debug(dst_dict)
+        return dst_dict
+
+    def set_word_form(self, new_form):
+        logging.debug(new_form)
+        logging.debug(self.forms)
+        self.forms[SuCommon.WORD_MODS] = self.update_form(new_form[SuCommon.WORD_MODS], self.forms[SuCommon.WORD_MODS])
+        logging.debug(self.forms)
+
+
+        #######################################################################
 
 

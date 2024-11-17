@@ -21,6 +21,9 @@ TRANSLATION = "translation"
 
 GET_RULES = "get_rules"
 
+SAVE_FORM = "save_form"
+NEW_FORM = "new_form"
+
 GET_FULL_FORM = "get_full_form"
 EXIT_APP = "exit_app"
 
