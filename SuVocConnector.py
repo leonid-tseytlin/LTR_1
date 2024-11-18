@@ -95,6 +95,9 @@ class SuVocConnector(QGraphicsObject):
     def set_new_form(self, root, new_form):
         self.outp_q.put(json.dumps({SuCommon.SAVE_FORM: {SuCommon.ROOT: root, SuCommon.NEW_FORM: new_form}}))
 
+    def set_new_word(self, root, word_class, translation):
+        self.outp_q.put(json.dumps({SuCommon.NEW_WORD: {SuCommon.ROOT: root, SuCommon.WORD_CLASS: word_class, SuCommon.TRANSLATION: translation}}))
+
     def send_exit_app_to_voc(self):
         self.outp_q.put(json.dumps({SuCommon.EXIT_APP: ""}))
 

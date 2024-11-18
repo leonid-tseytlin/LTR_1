@@ -18,6 +18,8 @@ class RulesManager:
     def set_rules(self, rules):
         self.rules = rules
         logging.debug('rules "%s"', self.rules)
+        key_list = list(self.rules.keys())
+        logging.debug(key_list)
         for word_class, word_mods in rules.items():
             logging.debug(word_class)
             logging.debug(word_mods)
@@ -51,6 +53,9 @@ class RulesManager:
             form_names_tmp = form_names_tmp[form_name]
 
         return form_names_tmp
+
+    def get_word_classes(self):
+        return list(self.rules.keys())
 
 def init_rules_manager():
     global rules_manager

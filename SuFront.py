@@ -11,18 +11,47 @@ import SuFormsManager
 class SuMainWindow(QWidget):
     stop_event = threading.Event()
 
+    horMargin = 20
+    horSize = 1500
+    vertSize = 900
+    rootVertStep = 100
+    rootWidth = 320
+    textEditHeight = 30
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Su Application")
-        self.resize(1500, 900)
+        self.resize(self.horSize, self.vertSize)
 
         self.inp_text_field = QLineEdit(self)
-        self.inp_text_field.move(20, 20)
+        self.inp_text_field.move(self.horMargin, 20)
 
         self.session = None
+        self.new_button = None
+        self.new_word = None
 
+        self.create_new_button()
         self.read_input_thread = threading.Thread(target=self.read_input_thread_func, args=())
         self.read_input_thread.start()
+
+    def create_new_button(self):
+        if not self.session:
+            vert_pos = 0
+        else:
+            vert_pos = len(self.session.rootManagers)
+
+        self.new_button = QPushButton("NEW", self)
+        self.new_button.move(self.horMargin, self.rootVertStep * (vert_pos + 1))
+        self.new_button.show()
+        self.new_button.clicked.connect(self.new_button_click)
+
+    def new_button_click(self):
+        if not self.session:
+            vert_pos = 0
+        else:
+            vert_pos = len(self.session.rootManagers)
+        self.new_button.hide()
+        self.new_word = NewWord(self, vert_pos)
 
     def read_input_thread_func(self):
         starting = ""
@@ -34,6 +63,9 @@ class SuMainWindow(QWidget):
             if starting != cur_text and cur_text != "":
                 logging.info('Old "%s" New "%s"', starting, cur_text)
                 starting = cur_text
+                if self.new_word:
+                    self.new_word.self_destroy()
+                    self.new_word = None
                 if self.session:
                     self.session.delete_form_mods()
                     self.session.delete_root_managers()
@@ -61,6 +93,8 @@ class VocComSession:
         for root_and_class in roots_and_class:
             new_idx = len(self.rootManagers)
             self.rootManagers.append(RootManager(self, root_and_class[SuCommon.ROOT], root_and_class[SuCommon.WORD_CLASS], new_idx))
+        self.mainWindow.new_button.deleteLater()
+        self.mainWindow.create_new_button()
 
     def create_form_mods(self, root_idx):
         self.delete_form_mods()
@@ -94,20 +128,22 @@ class RootManager:
     def __init__(self, session, root_word, class_word, idx):
         logging.debug('root_word "%s" class_word "%s"', root_word, class_word)
         self.currentSession = session
+        self.horMargin__ = session.mainWindow.horMargin
+        self.textEditHeight = session.mainWindow.textEditHeight
         self.dataGroupBox = None
         self.rootWord = root_word
         self.classWord = class_word
         self.index = idx
 
         self.dataGroupBox = QGroupBox("", self.currentSession.mainWindow)
-        self.dataGroupBox.resize(320, 62)
-        self.dataGroupBox.move(20, 100*(idx+1))
+        self.dataGroupBox.resize(session.mainWindow.rootWidth, 62)
+        self.dataGroupBox.move(self.horMargin__, session.mainWindow.rootVertStep * (idx+1))
         self.dataGroupBox.show()
 
         self.dataGroupBox.rootTextEdit = QTextEdit(self.dataGroupBox)
         self.dataGroupBox.rootTextEdit.setReadOnly(True)
         self.dataGroupBox.rootTextEdit.setPlainText(root_word)
-        self.dataGroupBox.rootTextEdit.resize(130, 30)
+        self.dataGroupBox.rootTextEdit.resize(130, self.textEditHeight)
         self.dataGroupBox.rootTextEdit.move(0, 5)
         self.dataGroupBox.rootTextEdit.show()
 
@@ -115,7 +151,7 @@ class RootManager:
         self.dataGroupBox.classTextEdit.setReadOnly(True)
         self.dataGroupBox.classTextEdit.setFontItalic(True)
         self.dataGroupBox.classTextEdit.setPlainText(class_word)
-        self.dataGroupBox.classTextEdit.resize(190, 30)
+        self.dataGroupBox.classTextEdit.resize(190, self.textEditHeight)
         self.dataGroupBox.classTextEdit.move(130, 5)
         self.dataGroupBox.classTextEdit.show()
 
@@ -143,9 +179,9 @@ class RootManager:
         self.dataGroupBox.transTextEdit = QTextEdit(self.dataGroupBox)
         self.dataGroupBox.transTextEdit.setReadOnly(True)
         self.dataGroupBox.transTextEdit.setPlainText(trans_word)
-        self.dataGroupBox.classTextEdit.resize(60, 30)
+        self.dataGroupBox.classTextEdit.resize(60, self.textEditHeight)
         self.dataGroupBox.classTextEdit.show()
-        self.dataGroupBox.transTextEdit.resize(130, 30)
+        self.dataGroupBox.transTextEdit.resize(130, self.textEditHeight)
         self.dataGroupBox.transTextEdit.move(190, 5)
         self.dataGroupBox.transTextEdit.show()
 
@@ -160,6 +196,50 @@ class RootManager:
 
     def __del__(self):
         logging.debug('RootManager deleted')
+
+#=====================================================================================================
+class NewWord:
+    def __init__(self, main_window, vert_pos):
+        self.mainWindow = main_window
+        self.dataGroupBox = QGroupBox("", main_window)
+        self.dataGroupBox.resize(main_window.rootWidth, main_window.textEditHeight * 4)
+        self.dataGroupBox.move(main_window.horMargin, main_window.rootVertStep * (vert_pos + 1))
+        self.dataGroupBox.show()
+
+        self.rootTextEdit = QTextEdit(self.dataGroupBox)
+        self.rootTextEdit.setPlaceholderText("root")
+        self.rootTextEdit.resize(main_window.rootWidth, main_window.textEditHeight)
+        self.rootTextEdit.move(0, 0)
+        self.rootTextEdit.show()
+
+        self.transTextEdit = QTextEdit(self.dataGroupBox)
+        self.transTextEdit.setPlaceholderText("translation")
+        self.transTextEdit.resize(main_window.rootWidth, main_window.textEditHeight)
+        self.transTextEdit.move(0, main_window.textEditHeight)
+        self.transTextEdit.show()
+
+        self.classBox = QComboBox(self.dataGroupBox)
+        self.classBox.addItems(SuRulesManager.rules_manager.get_word_classes())
+
+        self.classBox.resize(main_window.rootWidth, main_window.textEditHeight)
+        self.classBox.move(0, main_window.textEditHeight * 2)
+        self.classBox.show()
+
+        self.save_button = QPushButton("Save", self.dataGroupBox)
+        self.save_button.move(0, main_window.textEditHeight * 3)
+        self.save_button.show()
+        self.save_button.clicked.connect(self.save_button_click)
+
+    def save_button_click(self):
+        root_word = self.rootTextEdit.toPlainText()
+        SuVocConnector.connector.set_new_word(root_word, self.classBox.currentText(), self.transTextEdit.toPlainText())
+        self.dataGroupBox.deleteLater()
+        self.mainWindow.new_word = None
+        self.mainWindow.session = VocComSession(self.mainWindow)
+        SuVocConnector.connector.get_roots_by_starting(root_word, self.mainWindow.session.add_root_managers)
+
+    def self_destroy(self):
+        self.dataGroupBox.deleteLater()
 
 
 #=====================================================================================================

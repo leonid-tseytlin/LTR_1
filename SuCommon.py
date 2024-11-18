@@ -24,6 +24,8 @@ GET_RULES = "get_rules"
 SAVE_FORM = "save_form"
 NEW_FORM = "new_form"
 
+NEW_WORD = "new_word"
+
 GET_FULL_FORM = "get_full_form"
 EXIT_APP = "exit_app"
 

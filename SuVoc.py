@@ -14,7 +14,7 @@ class SuVocabulary():
     def build_words(self, data):
         for word in data["words"]:
             self.words.append(SuWord.SuVerb(data[SuCommon.WORD_CLASS], word))
-            self.roots.append(word["root"])
+            self.roots.append(word[SuCommon.ROOT])
 
         logging.debug(self.roots)
 
@@ -59,11 +59,19 @@ class SuVocabulary():
         return self.rules
 
     def handle_save_form(self, data):
-        logging.info(data)
+        logging.debug(data)
         idx = self.roots.index(data[SuCommon.ROOT])
         self.words[idx].set_word_form(data[SuCommon.NEW_FORM])
         return None
 
+    def handle_new_word(self, data):
+        logging.debug(data)
+        word_data = {SuCommon.ROOT: data[SuCommon.ROOT], SuCommon.TRANSLATION: data[SuCommon.TRANSLATION],
+                     SuCommon.WORD_MODS: None}
+        logging.debug(word_data)
+
+        self.words.append(SuWord.SuVerb(data[SuCommon.WORD_CLASS], word_data))
+        self.roots.append(data[SuCommon.ROOT])
 
     def __init__(self):
 
@@ -74,6 +82,7 @@ class SuVocabulary():
             SuCommon.GET_FORMS: self.handle_get_forms,
             SuCommon.GET_RULES: self.handle_get_rules,
             SuCommon.SAVE_FORM: self.handle_save_form,
+            SuCommon.NEW_WORD: self.handle_new_word,
         }
         self.res_code = {
             SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
@@ -83,7 +92,7 @@ class SuVocabulary():
             SuCommon.GET_RULES: SuCommon.RULES,
         }
         self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE,
-                                         SuCommon.GET_RULES, SuCommon.SAVE_FORM, SuCommon.EXIT_APP))
+                                         SuCommon.GET_RULES, SuCommon.SAVE_FORM, SuCommon.NEW_WORD, SuCommon.EXIT_APP))
 
         self.words = []
         self.roots = []
