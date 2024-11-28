@@ -22,7 +22,7 @@ class SuVocConnector(QGraphicsObject):
         self.inp_q = inp_q
         self.outp_q = outp_q
 
-        self.parser = SuParser.SuParser((SuCommon.ROOTS_LIST, SuCommon.MODS_LIST, SuCommon.FORMS_LIST, SuCommon.TRANSLATION, SuCommon.RULES))
+        self.parser = SuParser.SuParser((SuCommon.VOC_INIT, SuCommon.ROOTS_LIST, SuCommon.MODS_LIST, SuCommon.FORMS_LIST, SuCommon.TRANSLATION, SuCommon.RULES))
         self.ctxCb = None
 
         self.resp_type_fn = {
@@ -67,6 +67,10 @@ class SuVocConnector(QGraphicsObject):
         self.ctxCb(dict_resp)
 
 # ---------------------------------------------------------------------------
+    def wait_for_voc_ready(self, cb_fn):
+        self.ctxCb = cb_fn
+        self.create_listener(str)
+
     def get_roots_by_starting(self, starting, cb_fn):
         self.ctxCb = cb_fn
         self.create_listener(list)

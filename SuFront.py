@@ -1,14 +1,19 @@
 import sys
 import PyQt5
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox, QRadioButton, QCheckBox, QTextEdit, QWidget, QComboBox
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QLineEdit, QPushButton, QGroupBox,
+                             QRadioButton, QCheckBox, QTextEdit, QWidget, QComboBox, QLabel,
+                             QVBoxLayout, QMenuBar, QToolBar, QAction)
+from random import randint
 import threading
 import logging
 import SuCommon
 import SuVocConnector
 import SuRulesManager
 import SuFormsManager
+import SuConfig
 
-class SuMainWindow(QWidget):
+class SuMainWindow(QtWidgets.QMainWindow):
     stop_event = threading.Event()
 
     horMargin = 20
@@ -20,19 +25,49 @@ class SuMainWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("Su Application")
         self.resize(self.horSize, self.vertSize)
-
-        self.inp_text_field = QLineEdit(self)
-        self.inp_text_field.move(self.horMargin, 20)
 
         self.session = None
         self.new_button = None
         self.new_word = None
+        self.config_window = None
+        self.inp_text_field = None
+        self.read_input_thread = None
+
+        SuVocConnector.connector.wait_for_voc_ready(self.voc_ready_handler)
+
+    def voc_ready_handler(self, data):
+        if data == SuCommon.SUCCESS:
+            self.voc_ready_to_work()
+        else:
+            if self.config_window is None:
+                self.config_window = SuConfig.ConfigWindow(self.horSize // 2, self.vertSize // 2)
+            self.config_window.show()
+
+    def voc_ready_to_work(self):
+        SuRulesManager.init_rules_manager()
+
+        toolbar = QToolBar("Toolbar")
+        self.addToolBar(toolbar)
+        button_action = QAction("Configuration", self)
+        button_action.setStatusTip("Configuration settings")
+        button_action.triggered.connect(self.toolbar_config_button_click)
+        toolbar.addAction(button_action)
+
+        self.inp_text_field = QLineEdit(self)
+        self.inp_text_field.move(self.horMargin, 40)
+        self.inp_text_field.show()
 
         self.create_new_button()
         self.read_input_thread = threading.Thread(target=self.read_input_thread_func, args=())
         self.read_input_thread.start()
+
+    def toolbar_config_button_click(self, s):
+        if self.config_window is None:
+            self.config_window = SuConfig.ConfigWindow(self.horSize//2, self.vertSize//2)
+        self.config_window.show()
 
     def create_new_button(self):
         if not self.session:
@@ -56,12 +91,12 @@ class SuMainWindow(QWidget):
     def read_input_thread_func(self):
         starting = ""
         while not self.stop_event.wait(1):
-            logging.info('read_input_thread_func running')
+            logging.debug('read_input_thread_func running')
             cur_text = self.inp_text_field.text()
             if cur_text:
-                logging.info(cur_text)
+                logging.debug(cur_text)
             if starting != cur_text and cur_text != "":
-                logging.info('Old "%s" New "%s"', starting, cur_text)
+                logging.debug('Old "%s" New "%s"', starting, cur_text)
                 starting = cur_text
                 if self.new_word:
                     self.new_word.self_destroy()
@@ -246,11 +281,11 @@ class NewWord:
 def su_front_main_func(inp_q, outp_q):
 
     SuVocConnector.init_connector(inp_q, outp_q)
-    SuRulesManager.init_rules_manager()
 
     app = QApplication(sys.argv)
     window = SuMainWindow()
     window.show()
+
     logging.debug('Before exit')
     sys.exit(app.exec_())
     logging.debug('After exit')

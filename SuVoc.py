@@ -6,10 +6,38 @@ import SuParser
 import json
 import logging
 
-file_name = "./su_verbs.yaml" #Temporary. Should be defined by configuration
+config_file_name = "./ltr_config.yaml"
 
 
 class SuVocabulary():
+
+    def read_config(self):
+        if not os.path.exists(config_file_name):
+            logging.error("Configuration file does not exist")
+            return None
+        try:
+            with open(config_file_name, 'r') as f:
+                logging.info(f'Open {config_file_name}')
+                config_data = yaml.safe_load(f)
+                logging.debug(config_data)
+                return config_data
+        except:
+            logging.error("Not yaml file")
+            return None
+
+    def read_voc_data(self, config_data):
+        for file_name in config_data:
+            if not os.path.exists(file_name):
+                logging.error("File %s does not exist", file_name)
+                return None
+            try:
+                with open(file_name, 'r') as f:
+                    logging.info(f'Open {file_name}')
+                    data = yaml.safe_load(f)
+                    return data
+            except:
+                logging.error("Not yaml file")
+                return None
 
     def build_words(self, data):
         for word in data["words"]:
@@ -23,6 +51,22 @@ class SuVocabulary():
         logging.debug(self.rules)
         #            logging.debug(data["rules"]["word_mods"])
 
+    def validate_config_data(self, config_data):
+        return True
+
+#---------------------------------------------------------------------------------------
+#   MESSAGE HANDLERS
+
+    def handle_config_response(self, config_data):
+        logging.debug(config_data)
+        if not self.validate_config_data(config_data):
+            return SuCommon.CONFIG_REQ
+        else:
+            data = self.read_voc_data(config_data)
+            if data is not None:
+                self.build_words(data)
+                self.build_rules(data)
+            return None
 
     def handle_get_roots(self, data):
         logging.debug(data)
@@ -73,6 +117,7 @@ class SuVocabulary():
         self.words.append(SuWord.SuVerb(data[SuCommon.WORD_CLASS], word_data))
         self.roots.append(data[SuCommon.ROOT])
 
+# ---------------------------------------------------------------------------------------
     def __init__(self):
 
         self.handler_fn = {
@@ -83,6 +128,7 @@ class SuVocabulary():
             SuCommon.GET_RULES: self.handle_get_rules,
             SuCommon.SAVE_FORM: self.handle_save_form,
             SuCommon.NEW_WORD: self.handle_new_word,
+            SuCommon.CONFIG_RESP: self.handle_config_response
         }
         self.res_code = {
             SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
@@ -90,6 +136,7 @@ class SuVocabulary():
             SuCommon.GET_MODS: SuCommon.MODS_LIST,
             SuCommon.GET_FORMS: SuCommon.FORMS_LIST,
             SuCommon.GET_RULES: SuCommon.RULES,
+            SuCommon.CONFIG_RESP: SuCommon.VOC_INIT
         }
         self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE,
                                          SuCommon.GET_RULES, SuCommon.SAVE_FORM, SuCommon.NEW_WORD, SuCommon.EXIT_APP))
@@ -98,15 +145,24 @@ class SuVocabulary():
         self.roots = []
         self.rules = {}
 
-        with open(file_name, 'r') as f:
-            logging.info(f'Open {file_name}')
-            data = yaml.safe_load(f)
+        self.config_changed = False
 
-            self.build_words(data)
-            self.build_rules(data)
-
+# ---------------------------------------------------------------------------------------
 def su_voc_main_func(inp_q, outp_q):
     voc = SuVocabulary()
+
+    config_data = voc.read_config()
+    logging.debug(config_data)
+    if config_data is not None:
+        data = voc.read_voc_data(config_data)
+        if data is not None:
+            voc.build_words(data)
+            voc.build_rules(data)
+            outp_q.put(json.dumps({SuCommon.VOC_INIT: SuCommon.SUCCESS}))
+        else:
+            outp_q.put(json.dumps({SuCommon.VOC_INIT: SuCommon.CONFIG_REQ}))
+    else:
+        outp_q.put(json.dumps({SuCommon.VOC_INIT: SuCommon.CONFIG_REQ}))
 
     app_exit = False
     while not app_exit:
