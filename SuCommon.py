@@ -6,7 +6,9 @@ WORD_MODS = "word_mods"
 FORM_NAMES = "form_names"
 WORD_CLASS = "word_class"
 WORDS = "words"
+WORDS_FILE = "words_file"
 RULES = "rules"
+RULES_FILE = "rules_file"
 
 GET_ROOTS = "get_roots"
 ROOTS_LIST = "roots_list"
@@ -32,7 +34,6 @@ SUCCESS = "success"
 CONFIG_REQ = "config_req"
 
 CONFIG_RESP = "config_resp"
-VOC_PATH = "voc_path"
 
 GET_FULL_FORM = "get_full_form"
 EXIT_APP = "exit_app"

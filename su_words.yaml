@@ -1,24 +1,8 @@
 ---
-  word_class: "verb"
-  rules:
-    word_mods:
-        conjugation:
-            present:
-            past:
-            conditional:
-            imperative:
-    form_names:
-        conjugation:
-                - minä
-                - sinä
-                - hän
-                - me
-                - te
-                - he
-                - passive
   words:
     -
         root: istua
+        word_class: "verb"
         translation: сидеть
         word_mods:
           conjugation:
@@ -56,6 +40,7 @@
                 - istuttakoon
     -
         root: nähdä
+        word_class: "verb"
         translation: видеть
         word_mods:
           conjugation:
@@ -77,6 +62,7 @@
                 - ~
     -
         root: näyttää
+        word_class: "verb"
         translation: показывать
         word_mods:
           conjugation:
@@ -98,6 +84,7 @@
                 - ~
     -
         root: kysyä
+        word_class: "verb"
         translation: спрашивать
         word_mods:
           conjugation:
@@ -119,6 +106,7 @@
                 - ~
     -
         root: puhua
+        word_class: "verb"
         translation: говорить
         word_mods:
           conjugation:
@@ -140,6 +128,7 @@
                 - ~
     -
         root: sanoa
+        word_class: "verb"
         translation: сказать
         word_mods:
           conjugation:
@@ -161,6 +150,7 @@
                 - ~
     -
         root: kulkea
+        word_class: "verb"
         translation: идти
         word_mods:
           conjugation:
@@ -182,6 +172,7 @@
                 - ~
     -
         root: avata
+        word_class: "verb"
         translation: открыть
         word_mods:
               

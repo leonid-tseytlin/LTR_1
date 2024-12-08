@@ -26,8 +26,8 @@ class SuNoun(SuWord):
 #######################################################################
 class SuVerb(SuWord):
 
-    def __init__(self, word_class, data):
-        super().__init__(word_class)
+    def __init__(self, data):
+        super().__init__(data[SuCommon.WORD_CLASS])
         self.root = data[SuCommon.ROOT]
         self.trans = data[SuCommon.TRANSLATION]
 #        key_list = list(data[SuCommon.WORD_MODS])

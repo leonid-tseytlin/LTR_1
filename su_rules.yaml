@@ -1,0 +1,19 @@
+---
+  rules:
+    -
+        word_class: "verb"
+        word_mods:
+            conjugation:
+                present:
+                past:
+                conditional:
+                imperative:
+        form_names:
+            conjugation:
+                - minä
+                - sinä
+                - hän
+                - me
+                - te
+                - he
+                - passive

@@ -26,30 +26,43 @@ class SuVocabulary():
             return None
 
     def read_voc_data(self, config_data):
-        for file_name in config_data:
-            if not os.path.exists(file_name):
-                logging.error("File %s does not exist", file_name)
-                return None
-            try:
-                with open(file_name, 'r') as f:
-                    logging.info(f'Open {file_name}')
-                    data = yaml.safe_load(f)
-                    return data
-            except:
-                logging.error("Not yaml file")
-                return None
+        logging.debug(config_data)
+        if not os.path.exists(config_data[SuCommon.WORDS_FILE]):
+            logging.error("File %s does not exist", config_data[SuCommon.WORDS_FILE])
+            return None
+        if not os.path.exists(config_data[SuCommon.RULES_FILE]):
+            logging.error("File %s does not exist", config_data[SuCommon.RULES_FILE])
+            return None
+        file_names = [config_data[SuCommon.WORDS_FILE], config_data[SuCommon.RULES_FILE]]
+        try:
+            with open(config_data[SuCommon.WORDS_FILE], 'r') as words_file:
+                logging.info(f'Open {config_data[SuCommon.WORDS_FILE]}')
+                words_data = yaml.safe_load(words_file)
+        except:
+            logging.error("Not yaml file")
+            return None
+        try:
+            with open(config_data[SuCommon.RULES_FILE], 'r') as rules_file:
+                logging.info(f'Open {config_data[SuCommon.RULES_FILE]}')
+                rules_data = yaml.safe_load(rules_file)
+        except:
+            logging.error("Not yaml file")
+            return None
+
+        return words_data, rules_data
 
     def build_words(self, data):
-        for word in data["words"]:
-            self.words.append(SuWord.SuVerb(data[SuCommon.WORD_CLASS], word))
+        for word in data[SuCommon.WORDS]:
+            self.words.append(SuWord.SuVerb(word))
             self.roots.append(word[SuCommon.ROOT])
 
         logging.debug(self.roots)
 
     def build_rules(self, data):
-        self.rules[data[SuCommon.WORD_CLASS]] = data["rules"]
+        logging.debug(data)
+        for rule in data[SuCommon.RULES]:
+            self.rules[rule[SuCommon.WORD_CLASS]] = rule
         logging.debug(self.rules)
-        #            logging.debug(data["rules"]["word_mods"])
 
     def validate_config_data(self, config_data):
         return True
@@ -62,10 +75,10 @@ class SuVocabulary():
         if not self.validate_config_data(config_data):
             return SuCommon.CONFIG_REQ
         else:
-            data = self.read_voc_data(config_data)
-            if data is not None:
-                self.build_words(data)
-                self.build_rules(data)
+            words_data, rules_data = self.read_voc_data(config_data)
+            if words_data is not None:
+                self.build_words(words_data)
+                self.build_rules(rules_data)
             return None
 
     def handle_get_roots(self, data):
@@ -139,7 +152,7 @@ class SuVocabulary():
             SuCommon.CONFIG_RESP: SuCommon.VOC_INIT
         }
         self.parser = SuParser.SuParser((SuCommon.GET_ROOTS, SuCommon.GET_MODS, SuCommon.GET_FORMS, SuCommon.TRANSLATE,
-                                         SuCommon.GET_RULES, SuCommon.SAVE_FORM, SuCommon.NEW_WORD, SuCommon.EXIT_APP))
+                                         SuCommon.GET_RULES, SuCommon.SAVE_FORM, SuCommon.NEW_WORD, SuCommon.CONFIG_RESP, SuCommon.EXIT_APP))
 
         self.words = []
         self.roots = []
@@ -154,10 +167,10 @@ def su_voc_main_func(inp_q, outp_q):
     config_data = voc.read_config()
     logging.debug(config_data)
     if config_data is not None:
-        data = voc.read_voc_data(config_data)
-        if data is not None:
-            voc.build_words(data)
-            voc.build_rules(data)
+        words_data, rules_data = voc.read_voc_data(config_data)
+        if words_data is not None:
+            voc.build_words(words_data)
+            voc.build_rules(rules_data)
             outp_q.put(json.dumps({SuCommon.VOC_INIT: SuCommon.SUCCESS}))
         else:
             outp_q.put(json.dumps({SuCommon.VOC_INIT: SuCommon.CONFIG_REQ}))
