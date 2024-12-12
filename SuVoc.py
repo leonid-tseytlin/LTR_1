@@ -53,7 +53,7 @@ class SuVocabulary():
 
     def build_words(self, data):
         for word in data[SuCommon.WORDS]:
-            self.words.append(SuWord.SuVerb(word))
+            self.words.append(SuWord.SuWord(word))
             self.roots.append(word[SuCommon.ROOT])
 
         logging.debug(self.roots)
@@ -123,11 +123,11 @@ class SuVocabulary():
 
     def handle_new_word(self, data):
         logging.debug(data)
-        word_data = {SuCommon.ROOT: data[SuCommon.ROOT], SuCommon.TRANSLATION: data[SuCommon.TRANSLATION],
+        word_data = {SuCommon.ROOT: data[SuCommon.ROOT], SuCommon.WORD_CLASS: data[SuCommon.WORD_CLASS], SuCommon.TRANSLATION: data[SuCommon.TRANSLATION],
                      SuCommon.WORD_MODS: None}
         logging.debug(word_data)
 
-        self.words.append(SuWord.SuVerb(data[SuCommon.WORD_CLASS], word_data))
+        self.words.append(SuWord.SuWord(word_data))
         self.roots.append(data[SuCommon.ROOT])
 
 # ---------------------------------------------------------------------------------------
