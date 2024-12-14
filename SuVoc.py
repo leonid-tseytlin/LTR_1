@@ -5,6 +5,7 @@ import SuCommon
 import SuParser
 import json
 import logging
+from datetime import datetime
 
 config_file_name = "./ltr_config.yaml"
 
@@ -33,11 +34,11 @@ class SuVocabulary():
         if not os.path.exists(config_data[SuCommon.RULES_FILE]):
             logging.error("File %s does not exist", config_data[SuCommon.RULES_FILE])
             return None
-        file_names = [config_data[SuCommon.WORDS_FILE], config_data[SuCommon.RULES_FILE]]
         try:
             with open(config_data[SuCommon.WORDS_FILE], 'r') as words_file:
                 logging.info(f'Open {config_data[SuCommon.WORDS_FILE]}')
                 words_data = yaml.safe_load(words_file)
+                self.words_file = config_data[SuCommon.WORDS_FILE]
         except:
             logging.error("Not yaml file")
             return None
@@ -45,6 +46,7 @@ class SuVocabulary():
             with open(config_data[SuCommon.RULES_FILE], 'r') as rules_file:
                 logging.info(f'Open {config_data[SuCommon.RULES_FILE]}')
                 rules_data = yaml.safe_load(rules_file)
+                self.rules_file = config_data[SuCommon.RULES_FILE]
         except:
             logging.error("Not yaml file")
             return None
@@ -52,11 +54,13 @@ class SuVocabulary():
         return words_data, rules_data
 
     def build_words(self, data):
-        for word in data[SuCommon.WORDS]:
+        for word in data:
+#            logging.debug(word)
             self.words.append(SuWord.SuWord(word))
             self.roots.append(word[SuCommon.ROOT])
 
         logging.debug(self.roots)
+        logging.debug(self.words)
 
     def build_rules(self, data):
         logging.debug(data)
@@ -119,6 +123,7 @@ class SuVocabulary():
         logging.debug(data)
         idx = self.roots.index(data[SuCommon.ROOT])
         self.words[idx].set_word_form(data[SuCommon.NEW_FORM])
+        self.voc_updated = True
         return None
 
     def handle_new_word(self, data):
@@ -129,6 +134,25 @@ class SuVocabulary():
 
         self.words.append(SuWord.SuWord(word_data))
         self.roots.append(data[SuCommon.ROOT])
+        self.voc_updated = True
+
+    def handle_exit(self, data):
+        logging.debug("Handle EXIT signal")
+
+        if self.voc_updated:
+            backup_words_file = os.path.splitext(os.path.basename(self.words_file))[0] + "_" + datetime.now().strftime("%Y_%m_%d-%H_%M_%S") + ".yaml"
+            logging.debug(backup_words_file)
+
+            logging.info("File %s was changed. Save backup file %s", self.words_file, backup_words_file)
+            os.rename(self.words_file, backup_words_file)
+
+            with open(self.words_file, 'w') as outfile:
+                yaml.emitter.Emitter.prepare_tag = lambda self, tag: ''
+                yaml.Dumper.add_representer(type(None), lambda dumper, value: dumper.represent_scalar(u'tag:yaml.org,2002:null', '~'))
+
+                yaml.dump(self.words, outfile, sort_keys=False, explicit_start=True, allow_unicode=True)
+
+        return None
 
 # ---------------------------------------------------------------------------------------
     def __init__(self):
@@ -141,7 +165,8 @@ class SuVocabulary():
             SuCommon.GET_RULES: self.handle_get_rules,
             SuCommon.SAVE_FORM: self.handle_save_form,
             SuCommon.NEW_WORD: self.handle_new_word,
-            SuCommon.CONFIG_RESP: self.handle_config_response
+            SuCommon.CONFIG_RESP: self.handle_config_response,
+            SuCommon.EXIT_APP: self.handle_exit
         }
         self.res_code = {
             SuCommon.GET_ROOTS: SuCommon.ROOTS_LIST,
@@ -157,6 +182,11 @@ class SuVocabulary():
         self.words = []
         self.roots = []
         self.rules = {}
+
+        self.words_file = None
+        self.rules_file = None
+
+        self.voc_updated = False
 
         self.config_changed = False
 
@@ -189,7 +219,6 @@ def su_voc_main_func(inp_q, outp_q):
 
             if key == SuCommon.EXIT_APP:
                 app_exit = True
-                break
 
             out_data = voc.handler_fn[key](parsed_data)
             if out_data is not None:

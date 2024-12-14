@@ -1,178 +1,181 @@
 ---
-  words:
-    -
-        root: istua
-        word_class: "verb"
-        translation: сидеть
-        word_mods:
-          conjugation:
-              present:
-                - istun
-                - istut
-                - istuu
-                - istumme
-                - istutte
-                - istuvat
-                - istutaan
-              past:
-                - istuin
-                - istuit
-                - istui
-                - istuimme
-                - istuitte
-                - istuivat
-                - istuttiin
-              conditional:
-                - istuisin
-                - istuisit
-                - istuisi
-                - istuisimme
-                - istuisitte
-                - istuisivat
-                - istuttaisiin
-              imperative:
-                - ~
-                - istu
-                - istukoon
-                - istukaamme
-                - istukaa
-                - istukoot
-                - istuttakoon
-    -
-        root: nähdä
-        word_class: "verb"
-        translation: видеть
-        word_mods:
-          conjugation:
-              present:
-                - näen
-                - näet
-                - näkee
-                - näemme
-                - näette
-                - näkevät
-                - ~
-              past:
-                - näin
-                - näit
-                - näki
-                - näimme
-                - näitte
-                - näkivat
-                - ~
-    -
-        root: näyttää
-        word_class: "verb"
-        translation: показывать
-        word_mods:
-          conjugation:
-              present:
-                - näytän
-                - näytät
-                - näyttää
-                - näytämme
-                - näytätte
-                - näyttävät
-                - ~
-              past:
-                - näytin
-                - näytit
-                - näytti
-                - näytimme
-                - näytitte
-                - näyttivät
-                - ~
-    -
-        root: kysyä
-        word_class: "verb"
-        translation: спрашивать
-        word_mods:
-          conjugation:
-              present:
-                - kysyn
-                - kysyt
-                - kysyy
-                - kysymme
-                - kysytte 
-                - kysyvät
-                - ~
-              past:
-                - kysyin
-                - kysyit
-                - kysyi
-                - kysyimme
-                - kysyitte
-                - kysyivät
-                - ~
-    -
-        root: puhua
-        word_class: "verb"
-        translation: говорить
-        word_mods:
-          conjugation:
-              present:
-                - puhun
-                - puhut
-                - puhuu
-                - puhumme
-                - puhutte
-                - puhuvat
-                - ~
-              past:
-                - puhuin
-                - puhuit
-                - puhui
-                - puhuimme
-                - puhuitte
-                - puhuivat
-                - ~
-    -
-        root: sanoa
-        word_class: "verb"
-        translation: сказать
-        word_mods:
-          conjugation:
-              present:
-                - sanon
-                - sanot
-                - sanoo
-                - sanomme
-                - sanotte
-                - sanovat
-                - ~
-              past:
-                - sanoin
-                - sanoit
-                - sanoi
-                - sanoimme
-                - sanoitte
-                - sanoivat
-                - ~
-    -
-        root: kulkea
-        word_class: "verb"
-        translation: идти
-        word_mods:
-          conjugation:
-              present:
-                - kuljen
-                - kuljet
-                - kulkee
-                - kuljemme
-                - kuljette
-                - kulkevat
-                - ~
-              past:
-                - kuljin
-                - kuljit
-                - kulki
-                - kuljimme
-                - kuljitte
-                - kulkivat
-                - ~
-    -
-        root: avata
-        word_class: "verb"
-        translation: открыть
-        word_mods:
-              
+- root: istua
+  word_class: verb
+  translation: сидеть
+  word_mods:
+    conjugation:
+      present:
+      - istun
+      - istut
+      - istuu
+      - istumme
+      - istutte
+      - istuvat
+      - istutaan
+      past:
+      - istuin
+      - istuit
+      - istui
+      - istuimme
+      - istuitte
+      - istuivat
+      - istuttiin
+      conditional:
+      - istuisin
+      - istuisit
+      - istuisi
+      - istuisimme
+      - istuisitte
+      - istuisivat
+      - istuttaisiin
+      imperative:
+      - ~
+      - istu
+      - istukoon
+      - istukaamme
+      - istukaa
+      - istukoot
+      - istuttakoon
+- root: nähdä
+  word_class: verb
+  translation: видеть
+  word_mods:
+    conjugation:
+      present:
+      - näen
+      - näet
+      - näkee
+      - näemme
+      - näette
+      - näkevät
+      - ~
+      past:
+      - näin
+      - näit
+      - näki
+      - näimme
+      - näitte
+      - näkivat
+      - ~
+- root: näyttää
+  word_class: verb
+  translation: показывать
+  word_mods:
+    conjugation:
+      present:
+      - näytän
+      - näytät
+      - näyttää
+      - näytämme
+      - näytätte
+      - näyttävät
+      - ~
+      past:
+      - näytin
+      - näytit
+      - näytti
+      - näytimme
+      - näytitte
+      - näyttivät
+      - ~
+- root: kysyä
+  word_class: verb
+  translation: спрашивать
+  word_mods:
+    conjugation:
+      present:
+      - kysyn
+      - kysyt
+      - kysyy
+      - kysymme
+      - kysytte
+      - kysyvät
+      - ~
+      past:
+      - kysyin
+      - kysyit
+      - kysyi
+      - kysyimme
+      - kysyitte
+      - kysyivät
+      - ~
+- root: puhua
+  word_class: verb
+  translation: говорить
+  word_mods:
+    conjugation:
+      present:
+      - puhun
+      - puhut
+      - puhuu
+      - puhumme
+      - puhutte
+      - puhuvat
+      - ~
+      past:
+      - puhuin
+      - puhuit
+      - puhui
+      - puhuimme
+      - puhuitte
+      - puhuivat
+      - ~
+- root: sanoa
+  word_class: verb
+  translation: сказать
+  word_mods:
+    conjugation:
+      present:
+      - sanon
+      - sanot
+      - sanoo
+      - sanomme
+      - sanotte
+      - sanovat
+      - ~
+      past:
+      - sanoin
+      - sanoit
+      - sanoi
+      - sanoimme
+      - sanoitte
+      - sanoivat
+      - ~
+- root: kulkea
+  word_class: verb
+  translation: идти
+  word_mods:
+    conjugation:
+      present:
+      - kuljen
+      - kuljet
+      - kulkee
+      - kuljemme
+      - kuljette
+      - kulkevat
+      - ~
+      past:
+      - kuljin
+      - kuljit
+      - kulki
+      - kuljimme
+      - kuljitte
+      - kulkivat
+      - ~
+- root: avata
+  word_class: verb
+  translation: открыть
+  word_mods: ~
+- root: haluta
+  word_class: verb
+  translation: хотеть
+  word_mods:
+    conjugation:
+      present:
+      - haluan
+      - haluat
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
