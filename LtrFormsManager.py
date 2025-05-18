@@ -2,7 +2,7 @@ import sys
 import PyQt5
 from PyQt5.QtWidgets import QTextEdit, QPushButton, QGroupBox, QComboBox, QMessageBox
 import logging
-import SuFront
+import LtrFront
 import LtrCommon
 import SuVocConnector
 import SuRulesManager

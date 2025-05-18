@@ -10,7 +10,7 @@ import logging
 import LtrCommon
 import SuVocConnector
 import SuRulesManager
-import SuFormsManager
+import LtrFormsManager
 import LtrConfig
 
 class SuMainWindow(QtWidgets.QMainWindow):
@@ -134,7 +134,7 @@ class VocComSession:
     def create_form_mods(self, root_idx):
         self.delete_form_mods()
         logging.debug('Trying to create forms manager')
-        self.formsManager = SuFormsManager.FormsManager(self,
+        self.formsManager = LtrFormsManager.FormsManager(self,
                                                         self.rootManagers[root_idx].get_root_word(),
                                                         self.rootManagers[root_idx].get_class_word())
 
