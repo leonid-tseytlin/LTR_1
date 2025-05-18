@@ -9,7 +9,7 @@ import threading
 import logging
 import LtrCommon
 import SuVocConnector
-import SuRulesManager
+import LtrRulesManager
 import LtrFormsManager
 import LtrConfig
 
@@ -47,7 +47,7 @@ class SuMainWindow(QtWidgets.QMainWindow):
             self.config_window.show()
 
     def voc_ready_to_work(self):
-        SuRulesManager.init_rules_manager()
+        LtrRulesManager.init_rules_manager()
 
         toolbar = QToolBar("Toolbar")
         self.addToolBar(toolbar)
@@ -254,7 +254,7 @@ class NewWord:
         self.transTextEdit.show()
 
         self.classBox = QComboBox(self.dataGroupBox)
-        self.classBox.addItems(SuRulesManager.rules_manager.get_word_classes())
+        self.classBox.addItems(LtrRulesManager.rules_manager.get_word_classes())
 
         self.classBox.resize(main_window.rootWidth, main_window.textEditHeight)
         self.classBox.move(0, main_window.textEditHeight * 2)

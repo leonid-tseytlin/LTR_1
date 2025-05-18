@@ -5,7 +5,7 @@ import logging
 import LtrFront
 import LtrCommon
 import SuVocConnector
-import SuRulesManager
+import LtrRulesManager
 
 #=====================================================================================================
 class FormsManager:
@@ -56,7 +56,7 @@ class FormsManager:
             self.handle_new_mod(mods_list)
 
         def handle_new_mod(self, mods_list):
-            rules_mods = SuRulesManager.rules_manager.get_word_mods(self.manager_instance.classWord, self.hierarchyList)
+            rules_mods = LtrRulesManager.rules_manager.get_word_mods(self.manager_instance.classWord, self.hierarchyList)
             logging.debug(mods_list)
             logging.debug(rules_mods)
 
@@ -71,19 +71,19 @@ class FormsManager:
         def create_new_mod(self, new_mod):
             logging.debug("New Mod: " + new_mod)
             logging.debug('currentHierarchyList %s', self.hierarchyList)
-            hier_status = SuRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord, self.hierarchyList)
+            hier_status = LtrRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord, self.hierarchyList)
             logging.debug(hier_status)
             self.mod_selector.setEnabled(False)
             self.manager_instance.ModButton(self.manager_instance, new_mod, len(self.hierarchyList), self.button_vert_pos, True)
-            if hier_status == SuRulesManager.HIER_FINAL:
+            if hier_status == LtrRulesManager.HIER_FINAL:
                 logging.debug("Create new form")
                 self.manager_instance.create_new_word_form([], self.hierarchyList)
             else:
                 self.hierarchyList.append(new_mod)
                 logging.debug('currentHierarchyList %s', self.hierarchyList)
-                hier_status = SuRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord, self.hierarchyList)
+                hier_status = LtrRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord, self.hierarchyList)
                 logging.debug(hier_status)
-                if hier_status == SuRulesManager.HIER_INTER:
+                if hier_status == LtrRulesManager.HIER_INTER:
                     self.handle_new_mod([])
                 else:
                     logging.debug("Create new form")
@@ -136,9 +136,9 @@ class FormsManager:
                 self.manager_instance.currentHierarchyList.append(self.title)
             logging.debug('new_hierarchy "%s"', self.manager_instance.currentHierarchyList)
 
-            hier_status = SuRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord,
+            hier_status = LtrRulesManager.rules_manager.get_hierarchy_status(self.manager_instance.classWord,
                                                                             self.manager_instance.currentHierarchyList)
-            if hier_status == SuRulesManager.HIER_FINAL:
+            if hier_status == LtrRulesManager.HIER_FINAL:
                 logging.debug('mods_hierarchy_list "%s"', self.manager_instance.currentHierarchyList)
                 SuVocConnector.connector.get_forms_by_root(self.manager_instance.rootWord, self.manager_instance.currentHierarchyList,
                                                            self.manager_instance.set_word_forms)
@@ -179,7 +179,7 @@ class FormsTable:
         logging.debug(forms_names_list)
         forms_names_list = forms_names_list[:-1]
         logging.debug(forms_names_list)
-        names_list = SuRulesManager.rules_manager.get_form_names(self.manager_instance.classWord, forms_names_list)
+        names_list = LtrRulesManager.rules_manager.get_form_names(self.manager_instance.classWord, forms_names_list)
         logging.debug(names_list)
 
 
