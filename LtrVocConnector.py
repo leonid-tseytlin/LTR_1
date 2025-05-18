@@ -2,7 +2,7 @@ import json
 import logging
 import threading
 import LtrCommon
-import SuParser
+import LtrParser
 import PyQt5
 from PyQt5.QtWidgets import QGraphicsObject
 
@@ -22,7 +22,7 @@ class SuVocConnector(QGraphicsObject):
         self.inp_q = inp_q
         self.outp_q = outp_q
 
-        self.parser = SuParser.SuParser((LtrCommon.VOC_INIT, LtrCommon.ROOTS_LIST, LtrCommon.MODS_LIST, LtrCommon.FORMS_LIST, LtrCommon.TRANSLATION, LtrCommon.RULES))
+        self.parser = LtrParser.LtrParser((LtrCommon.VOC_INIT, LtrCommon.ROOTS_LIST, LtrCommon.MODS_LIST, LtrCommon.FORMS_LIST, LtrCommon.TRANSLATION, LtrCommon.RULES))
         self.ctxCb = None
 
         self.resp_type_fn = {

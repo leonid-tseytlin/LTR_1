@@ -2,7 +2,7 @@ import os.path
 import yaml
 import SuWord
 import LtrCommon
-import SuParser
+import LtrParser
 import json
 import logging
 from datetime import datetime
@@ -176,7 +176,7 @@ class SuVocabulary():
             LtrCommon.GET_RULES: LtrCommon.RULES,
             LtrCommon.CONFIG_RESP: LtrCommon.VOC_INIT
         }
-        self.parser = SuParser.SuParser((LtrCommon.GET_ROOTS, LtrCommon.GET_MODS, LtrCommon.GET_FORMS, LtrCommon.TRANSLATE,
+        self.parser = LtrParser.LtrParser((LtrCommon.GET_ROOTS, LtrCommon.GET_MODS, LtrCommon.GET_FORMS, LtrCommon.TRANSLATE,
                                          LtrCommon.GET_RULES, LtrCommon.SAVE_FORM, LtrCommon.NEW_WORD, LtrCommon.CONFIG_RESP, LtrCommon.EXIT_APP))
 
         self.words = []
