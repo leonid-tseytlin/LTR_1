@@ -11,7 +11,7 @@ import LtrCommon
 import SuVocConnector
 import SuRulesManager
 import SuFormsManager
-import SuConfig
+import LtrConfig
 
 class SuMainWindow(QtWidgets.QMainWindow):
     stop_event = threading.Event()
@@ -26,7 +26,7 @@ class SuMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Su Application")
+        self.setWindowTitle("LTR Application")
         self.resize(self.horSize, self.vertSize)
 
         self.session = None
@@ -43,7 +43,7 @@ class SuMainWindow(QtWidgets.QMainWindow):
             self.voc_ready_to_work()
         else:
             if self.config_window is None:
-                self.config_window = SuConfig.ConfigWindow(self.horSize // 2, self.vertSize // 2)
+                self.config_window = LtrConfig.ConfigWindow(self.horSize // 2, self.vertSize // 2)
             self.config_window.show()
 
     def voc_ready_to_work(self):
@@ -66,7 +66,7 @@ class SuMainWindow(QtWidgets.QMainWindow):
 
     def toolbar_config_button_click(self, s):
         if self.config_window is None:
-            self.config_window = SuConfig.ConfigWindow(self.horSize//2, self.vertSize//2)
+            self.config_window = LtrConfig.ConfigWindow(self.horSize//2, self.vertSize//2)
         self.config_window.show()
 
     def create_new_button(self):
