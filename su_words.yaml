@@ -179,3 +179,114 @@
       - ~
       - ~
       - ~
+- root: vuosi
+  word_class: noun
+  translation: год
+  word_mods:
+    declension:
+      singular:
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - vuotta
+- root: olla
+  word_class: verb
+  translation: быть
+  word_mods:
+    conjugation:
+      present:
+      - olen
+      - olet
+      - 'on'
+      - olemme
+      - olette
+      - ovat
+      - ~
+- root: talo
+  word_class: noun
+  translation: дом
+  word_mods:
+    declension:
+      singular:
+      - ~
+      - ~
+      - ~
+      - talossa
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+- root: nukkua
+  word_class: verb
+  translation: спать
+  word_mods:
+    conjugation:
+      present:
+      - nukun
+      - nukut
+      - nukkuu
+      - nukumme
+      - nukutte
+      - nukkuvat
+      - ~
+- root: kauppa
+  word_class: noun
+  translation: shop
+  word_mods:
+    declension:
+      singular:
+      - ~
+      - ~
+      - ~
+      - kaupassa
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+- root: päivä
+  word_class: noun
+  translation: день
+  word_mods:
+    declension:
+      singular:
+      - ~
+      - ~
+      - ~
+      - päivässa
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+      - ~
+- root: asua
+  word_class: verb
+  translation: жить
+  word_mods:
+    conjugation:
+      present:
+      - asun
+      - asut
+      - asuu
+      - asumme
+      - asutte
+      - asuvat
+      - ~

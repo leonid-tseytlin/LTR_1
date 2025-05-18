@@ -17,3 +17,23 @@
                 - te
                 - he
                 - passive
+    -
+        word_class: "noun"
+        word_mods:
+            declension:
+                singular:
+                plural:
+        form_names:
+            declension:
+                - nominative
+                - genitive
+                - partitive
+                - inessive
+                - elative
+                - illative
+                - adessive
+                - ablative
+                - allative
+                - essive
+                - translative
+                - abessive
