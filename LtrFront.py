@@ -8,12 +8,12 @@ from random import randint
 import threading
 import logging
 import LtrCommon
-import SuVocConnector
+import LtrVocConnector
 import LtrRulesManager
 import LtrFormsManager
 import LtrConfig
 
-class SuMainWindow(QtWidgets.QMainWindow):
+class LtrMainWindow(QtWidgets.QMainWindow):
     stop_event = threading.Event()
 
     horMargin = 20
@@ -36,7 +36,7 @@ class SuMainWindow(QtWidgets.QMainWindow):
         self.inp_text_field = None
         self.read_input_thread = None
 
-        SuVocConnector.connector.wait_for_voc_ready(self.voc_ready_handler)
+        LtrVocConnector.connector.wait_for_voc_ready(self.voc_ready_handler)
 
     def voc_ready_handler(self, data):
         if data == LtrCommon.SUCCESS:
@@ -106,12 +106,12 @@ class SuMainWindow(QtWidgets.QMainWindow):
                     self.session.delete_root_managers()
                     del self.session
                 self.session = VocComSession(self)
-                SuVocConnector.connector.get_roots_by_starting(starting, self.session.add_root_managers)
+                LtrVocConnector.connector.get_roots_by_starting(starting, self.session.add_root_managers)
 
     def closeEvent(self, event):
         logging.debug('closeEvent called')
         self.stop_event.set()
-        SuVocConnector.connector.send_exit_app_to_voc()
+        LtrVocConnector.connector.send_exit_app_to_voc()
 
     def __del__(self):
         logging.debug('Main Window deleted')
@@ -205,7 +205,7 @@ class RootManager:
     def translate_button_click(self):
         self.currentSession.currentRootTransactionIdx = self.index
         logging.debug('currentRootTransactionIdx "%u" set', self.currentSession.currentRootTransactionIdx)
-        SuVocConnector.connector.get_root_translation(self.rootWord, self.currentSession.set_root_translation)
+        LtrVocConnector.connector.get_root_translation(self.rootWord, self.currentSession.set_root_translation)
 
     def get_mods_button_click(self):
         self.currentSession.create_form_mods(self.index)
@@ -267,11 +267,11 @@ class NewWord:
 
     def save_button_click(self):
         root_word = self.rootTextEdit.toPlainText()
-        SuVocConnector.connector.set_new_word(root_word, self.classBox.currentText(), self.transTextEdit.toPlainText())
+        LtrVocConnector.connector.set_new_word(root_word, self.classBox.currentText(), self.transTextEdit.toPlainText())
         self.dataGroupBox.deleteLater()
         self.mainWindow.new_word = None
         self.mainWindow.session = VocComSession(self.mainWindow)
-        SuVocConnector.connector.get_roots_by_starting(root_word, self.mainWindow.session.add_root_managers)
+        LtrVocConnector.connector.get_roots_by_starting(root_word, self.mainWindow.session.add_root_managers)
 
     def self_destroy(self):
         self.dataGroupBox.deleteLater()
@@ -280,10 +280,10 @@ class NewWord:
 #=====================================================================================================
 def su_front_main_func(inp_q, outp_q):
 
-    SuVocConnector.init_connector(inp_q, outp_q)
+    LtrVocConnector.init_connector(inp_q, outp_q)
 
     app = QApplication(sys.argv)
-    window = SuMainWindow()
+    window = LtrMainWindow()
     window.show()
 
     logging.debug('Before exit')

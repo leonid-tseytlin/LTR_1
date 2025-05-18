@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QLineEdit, QPushButton, 
                              QVBoxLayout, QMenuBar, QToolBar, QAction, QGridLayout)
 import logging
 import LtrCommon
-import SuVocConnector
+import LtrVocConnector
 
 class ConfigWindow(QWidget):
     def __init__(self, h_size, v_size):
@@ -38,7 +38,7 @@ class ConfigWindow(QWidget):
         rules_file_name = self.rules_file_edit.text()
         words_file_name = self.words_file_edit.text()
         logging.debug('rules_file "%s" words_file "%s"', rules_file_name, words_file_name)
-        SuVocConnector.connector.send_configuration({LtrCommon.RULES_FILE: rules_file_name, LtrCommon.WORDS_FILE: words_file_name})
+        LtrVocConnector.connector.send_configuration({LtrCommon.RULES_FILE: rules_file_name, LtrCommon.WORDS_FILE: words_file_name})
 
         self.deleteLater()
 

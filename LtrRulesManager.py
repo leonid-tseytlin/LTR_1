@@ -1,6 +1,6 @@
 import logging
 import LtrCommon
-import SuVocConnector
+import LtrVocConnector
 
 HIER_FINAL = 10
 HIER_INTER = 20
@@ -13,7 +13,7 @@ class RulesManager:
     def __init__(self):
         logging.debug('Rules Manager created')
         self.rules = None
-        SuVocConnector.connector.get_rules(self.set_rules)
+        LtrVocConnector.connector.get_rules(self.set_rules)
 
     def set_rules(self, rules):
         self.rules = rules

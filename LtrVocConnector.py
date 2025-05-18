@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QGraphicsObject
 
 connector = None
 
-class SuVocConnector(QGraphicsObject):
+class LtrVocConnector(QGraphicsObject):
     strSignal = PyQt5.QtCore.pyqtSignal(str)
     listSignal = PyQt5.QtCore.pyqtSignal(list)
     dictSignal = PyQt5.QtCore.pyqtSignal(dict)
@@ -110,4 +110,4 @@ class SuVocConnector(QGraphicsObject):
 
 def init_connector(inp_q, outp_q):
     global connector
-    connector = SuVocConnector(inp_q, outp_q)
+    connector = LtrVocConnector(inp_q, outp_q)

@@ -1,6 +1,6 @@
 import os.path
 import yaml
-import SuWord
+import LtrWord
 import LtrCommon
 import LtrParser
 import json
@@ -10,7 +10,7 @@ from datetime import datetime
 config_file_name = "./ltr_config.yaml"
 
 
-class SuVocabulary():
+class LtrVocabulary():
 
     def read_config(self):
         if not os.path.exists(config_file_name):
@@ -56,7 +56,7 @@ class SuVocabulary():
     def build_words(self, data):
         for word in data:
 #            logging.debug(word)
-            self.words.append(SuWord.SuWord(word))
+            self.words.append(LtrWord.LtrWord(word))
             self.roots.append(word[LtrCommon.ROOT])
 
         logging.debug(self.roots)
@@ -132,7 +132,7 @@ class SuVocabulary():
                      LtrCommon.WORD_MODS: None}
         logging.debug(word_data)
 
-        self.words.append(SuWord.SuWord(word_data))
+        self.words.append(LtrWord.LtrWord(word_data))
         self.roots.append(data[LtrCommon.ROOT])
         self.voc_updated = True
 
@@ -192,7 +192,7 @@ class SuVocabulary():
 
 # ---------------------------------------------------------------------------------------
 def su_voc_main_func(inp_q, outp_q):
-    voc = SuVocabulary()
+    voc = LtrVocabulary()
 
     config_data = voc.read_config()
     logging.debug(config_data)

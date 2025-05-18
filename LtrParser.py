@@ -1,7 +1,7 @@
 import json
 import logging
 
-class SuParser():
+class LtrParser():
     def __init__(self, key_list):
         self.key_list = key_list
 

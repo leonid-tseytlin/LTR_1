@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QTextEdit, QPushButton, QGroupBox, QComboBox, QMessa
 import logging
 import LtrFront
 import LtrCommon
-import SuVocConnector
+import LtrVocConnector
 import LtrRulesManager
 
 #=====================================================================================================
@@ -29,7 +29,7 @@ class FormsManager:
         self.formsGroupBox.show()
 
         self.currentHierarchyList = [LtrCommon.WORD_MODS]
-        SuVocConnector.connector.get_mods_by_root(self.rootWord, [LtrCommon.WORD_MODS], self.set_form_mods)
+        LtrVocConnector.connector.get_mods_by_root(self.rootWord, [LtrCommon.WORD_MODS], self.set_form_mods)
 
     def set_form_mods(self, mods_list):
         for mod_name in mods_list:
@@ -140,11 +140,11 @@ class FormsManager:
                                                                             self.manager_instance.currentHierarchyList)
             if hier_status == LtrRulesManager.HIER_FINAL:
                 logging.debug('mods_hierarchy_list "%s"', self.manager_instance.currentHierarchyList)
-                SuVocConnector.connector.get_forms_by_root(self.manager_instance.rootWord, self.manager_instance.currentHierarchyList,
+                LtrVocConnector.connector.get_forms_by_root(self.manager_instance.rootWord, self.manager_instance.currentHierarchyList,
                                                            self.manager_instance.set_word_forms)
             else:
                 logging.debug('mods_hierarchy_list "%s"', self.manager_instance.currentHierarchyList)
-                SuVocConnector.connector.get_mods_by_root(self.manager_instance.rootWord,
+                LtrVocConnector.connector.get_mods_by_root(self.manager_instance.rootWord,
                                                           self.manager_instance.currentHierarchyList,
                                                           self.manager_instance.set_form_mods)
 
@@ -235,7 +235,7 @@ class FormsTable:
         for mod in reversed(self.hierarchyList):
             value = {mod: value}
         logging.debug(value)
-        SuVocConnector.connector.set_new_form(self.manager_instance.rootWord, value)
+        LtrVocConnector.connector.set_new_form(self.manager_instance.rootWord, value)
 
 
     def get_form_text(self):
