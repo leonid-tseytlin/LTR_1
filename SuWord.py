@@ -1,27 +1,15 @@
-import SuCommon
+import LtrCommon
 import logging
 
 class SuWord():
     def __init__(self, data):
         self.__dict__.update(data)
-#        logging.debug(self.word)
-    """
-        self.forms = {}
-        self.root = data[SuCommon.ROOT]
-        self.trans = data[SuCommon.TRANSLATION]
-        #        key_list = list(data[SuCommon.WORD_MODS])
-        self.forms[SuCommon.WORD_MODS] = data[SuCommon.WORD_MODS]
-        #        for key in key_list:
-        #            self.word_mods[key] = data["word_mods"][key]
-        logging.debug(self.forms[SuCommon.WORD_MODS])
-        self.wordClass = data[SuCommon.WORD_CLASS]
-"""
 
     def getWordClass(self):
-        return self.__dict__[SuCommon.WORD_CLASS]
+        return self.__dict__[LtrCommon.WORD_CLASS]
 
     def get_root(self):
-        return self.__dict__[SuCommon.ROOT]
+        return self.__dict__[LtrCommon.ROOT]
 
     def get_word_forms(self, mods_list):
         logging.debug(mods_list)
@@ -34,7 +22,7 @@ class SuWord():
         return word_forms_tmp
 
     def get_translation(self):
-        return self.__dict__[SuCommon.TRANSLATION]
+        return self.__dict__[LtrCommon.TRANSLATION]
 
     def get_word_mods(self, mods_list):
         logging.debug(mods_list)
@@ -70,9 +58,9 @@ class SuWord():
 
     def set_word_form(self, new_form):
         logging.debug(new_form)
-        logging.debug(self.__dict__[SuCommon.WORD_MODS])
-        self.__dict__[SuCommon.WORD_MODS] = self.update_form(new_form[SuCommon.WORD_MODS], self.__dict__[SuCommon.WORD_MODS])
-        logging.debug(self.__dict__[SuCommon.WORD_MODS])
+        logging.debug(self.__dict__[LtrCommon.WORD_MODS])
+        self.__dict__[LtrCommon.WORD_MODS] = self.update_form(new_form[LtrCommon.WORD_MODS], self.__dict__[LtrCommon.WORD_MODS])
+        logging.debug(self.__dict__[LtrCommon.WORD_MODS])
 
 
         #######################################################################

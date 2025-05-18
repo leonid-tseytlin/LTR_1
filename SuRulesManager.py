@@ -1,5 +1,5 @@
 import logging
-import SuCommon
+import LtrCommon
 import SuVocConnector
 
 HIER_FINAL = 10

@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QLineEdit, QPushButton, 
 from random import randint
 import threading
 import logging
-import SuCommon
+import LtrCommon
 import SuVocConnector
 import SuRulesManager
 import SuFormsManager
@@ -39,7 +39,7 @@ class SuMainWindow(QtWidgets.QMainWindow):
         SuVocConnector.connector.wait_for_voc_ready(self.voc_ready_handler)
 
     def voc_ready_handler(self, data):
-        if data == SuCommon.SUCCESS:
+        if data == LtrCommon.SUCCESS:
             self.voc_ready_to_work()
         else:
             if self.config_window is None:
@@ -127,7 +127,7 @@ class VocComSession:
     def add_root_managers(self, roots_and_class):
         for root_and_class in roots_and_class:
             new_idx = len(self.rootManagers)
-            self.rootManagers.append(RootManager(self, root_and_class[SuCommon.ROOT], root_and_class[SuCommon.WORD_CLASS], new_idx))
+            self.rootManagers.append(RootManager(self, root_and_class[LtrCommon.ROOT], root_and_class[LtrCommon.WORD_CLASS], new_idx))
         self.mainWindow.new_button.deleteLater()
         self.mainWindow.create_new_button()
 

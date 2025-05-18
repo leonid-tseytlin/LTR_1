@@ -1,7 +1,7 @@
 import json
 import logging
 import threading
-import SuCommon
+import LtrCommon
 import SuParser
 import PyQt5
 from PyQt5.QtWidgets import QGraphicsObject
@@ -22,7 +22,7 @@ class SuVocConnector(QGraphicsObject):
         self.inp_q = inp_q
         self.outp_q = outp_q
 
-        self.parser = SuParser.SuParser((SuCommon.VOC_INIT, SuCommon.ROOTS_LIST, SuCommon.MODS_LIST, SuCommon.FORMS_LIST, SuCommon.TRANSLATION, SuCommon.RULES))
+        self.parser = SuParser.SuParser((LtrCommon.VOC_INIT, LtrCommon.ROOTS_LIST, LtrCommon.MODS_LIST, LtrCommon.FORMS_LIST, LtrCommon.TRANSLATION, LtrCommon.RULES))
         self.ctxCb = None
 
         self.resp_type_fn = {
@@ -74,39 +74,39 @@ class SuVocConnector(QGraphicsObject):
     def get_roots_by_starting(self, starting, cb_fn):
         self.ctxCb = cb_fn
         self.create_listener(list)
-        self.outp_q.put(json.dumps({SuCommon.GET_ROOTS: starting}))
+        self.outp_q.put(json.dumps({LtrCommon.GET_ROOTS: starting}))
 
     def get_root_translation(self, root_word, cb_fn):
         self.ctxCb = cb_fn
         self.create_listener(str)
-        self.outp_q.put(json.dumps({SuCommon.TRANSLATE: {SuCommon.ROOT: root_word}}))
+        self.outp_q.put(json.dumps({LtrCommon.TRANSLATE: {LtrCommon.ROOT: root_word}}))
 
     def get_mods_by_root(self, root, mods_list, cb_fn):
         self.ctxCb = cb_fn
         self.create_listener(list)
-        self.outp_q.put(json.dumps({SuCommon.GET_MODS: {SuCommon.ROOT: root, SuCommon.MODS_LIST: mods_list}}))
+        self.outp_q.put(json.dumps({LtrCommon.GET_MODS: {LtrCommon.ROOT: root, LtrCommon.MODS_LIST: mods_list}}))
 
     def get_forms_by_root(self, root, mods_list, cb_fn):
         self.ctxCb = cb_fn
         self.create_listener(list)
-        self.outp_q.put(json.dumps({SuCommon.GET_FORMS: {SuCommon.ROOT: root, SuCommon.MODS_LIST: mods_list}}))
+        self.outp_q.put(json.dumps({LtrCommon.GET_FORMS: {LtrCommon.ROOT: root, LtrCommon.MODS_LIST: mods_list}}))
 
     def get_rules(self, cb_fn):
         self.ctxCb = cb_fn
         self.create_listener(dict)
-        self.outp_q.put(json.dumps({SuCommon.GET_RULES: ""}))
+        self.outp_q.put(json.dumps({LtrCommon.GET_RULES: ""}))
 
     def set_new_form(self, root, new_form):
-        self.outp_q.put(json.dumps({SuCommon.SAVE_FORM: {SuCommon.ROOT: root, SuCommon.NEW_FORM: new_form}}))
+        self.outp_q.put(json.dumps({LtrCommon.SAVE_FORM: {LtrCommon.ROOT: root, LtrCommon.NEW_FORM: new_form}}))
 
     def set_new_word(self, root, word_class, translation):
-        self.outp_q.put(json.dumps({SuCommon.NEW_WORD: {SuCommon.ROOT: root, SuCommon.WORD_CLASS: word_class, SuCommon.TRANSLATION: translation}}))
+        self.outp_q.put(json.dumps({LtrCommon.NEW_WORD: {LtrCommon.ROOT: root, LtrCommon.WORD_CLASS: word_class, LtrCommon.TRANSLATION: translation}}))
 
     def send_configuration(self, config_data):
-        self.outp_q.put(json.dumps({SuCommon.CONFIG_RESP: config_data}))
+        self.outp_q.put(json.dumps({LtrCommon.CONFIG_RESP: config_data}))
 
     def send_exit_app_to_voc(self):
-        self.outp_q.put(json.dumps({SuCommon.EXIT_APP: ""}))
+        self.outp_q.put(json.dumps({LtrCommon.EXIT_APP: ""}))
 
 def init_connector(inp_q, outp_q):
     global connector

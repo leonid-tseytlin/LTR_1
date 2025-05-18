@@ -3,7 +3,7 @@ import PyQt5
 from PyQt5.QtWidgets import QTextEdit, QPushButton, QGroupBox, QComboBox, QMessageBox
 import logging
 import SuFront
-import SuCommon
+import LtrCommon
 import SuVocConnector
 import SuRulesManager
 
@@ -28,8 +28,8 @@ class FormsManager:
         self.formsGroupBox.formButtons = []
         self.formsGroupBox.show()
 
-        self.currentHierarchyList = [SuCommon.WORD_MODS]
-        SuVocConnector.connector.get_mods_by_root(self.rootWord, [SuCommon.WORD_MODS], self.set_form_mods)
+        self.currentHierarchyList = [LtrCommon.WORD_MODS]
+        SuVocConnector.connector.get_mods_by_root(self.rootWord, [LtrCommon.WORD_MODS], self.set_form_mods)
 
     def set_form_mods(self, mods_list):
         for mod_name in mods_list:
@@ -174,8 +174,8 @@ class FormsTable:
 
         logging.debug(hierarchy_list)
         self.hierarchyList = hierarchy_list
-        word_mods_idx = hierarchy_list.index(SuCommon.WORD_MODS)
-        forms_names_list = hierarchy_list[:word_mods_idx] + [SuCommon.FORM_NAMES] + hierarchy_list[word_mods_idx+1:]
+        word_mods_idx = hierarchy_list.index(LtrCommon.WORD_MODS)
+        forms_names_list = hierarchy_list[:word_mods_idx] + [LtrCommon.FORM_NAMES] + hierarchy_list[word_mods_idx+1:]
         logging.debug(forms_names_list)
         forms_names_list = forms_names_list[:-1]
         logging.debug(forms_names_list)
